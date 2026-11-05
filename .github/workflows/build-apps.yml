@@ -1,0 +1,44 @@
+name: Build DayFlow apps
+on:
+  workflow_dispatch:
+    inputs:
+      server_url:
+        description: "Your DayFlow server URL, e.g. https://dayflow.example.com"
+        required: true
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build installer
+        shell: bash
+        working-directory: apps/electron
+        run: |
+          echo "{ \"serverUrl\": \"${{ inputs.server_url }}\" }" > config.json
+          npm install
+          npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with: { name: DayFlow-Windows-Installer, path: apps/electron/dist/*.exe }
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: android-actions/setup-android@v3
+      - name: Build debug APK
+        working-directory: apps/capacitor
+        run: |
+          URL="${{ inputs.server_url }}"
+          CLEAR=false; case "$URL" in http://*) CLEAR=true;; esac
+          sed -i "s#__SERVER_URL__#$URL#; s#\"cleartext\": false#\"cleartext\": $CLEAR#" capacitor.config.json
+          npm install
+          npx cap add android
+          npx cap sync android
+          cd android && ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with: { name: DayFlow-Android-APK, path: apps/capacitor/android/app/build/outputs/apk/debug/app-debug.apk }
