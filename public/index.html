@@ -1,0 +1,522 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>DayFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080711;--b2:#0C0A19;--sf:#15112A;--el:#211A40;--pr:#7952FF;--sc:#B29AFF;--bd:#403568;--tx:#F5F1FF;--mu:#81789D;--ok:#5EE0A0;--no:#FF6B8B;color-scheme:dark}
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font:14px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;padding-top:env(safe-area-inset-top,0px)}
+#app{display:flex;height:100%}
+nav{width:196px;background:var(--b2);border-right:1px solid var(--bd);padding:14px 10px;display:flex;flex-direction:column;gap:3px;overflow:auto;flex:none}
+.logo{font-weight:700;letter-spacing:4px;color:var(--sc);padding:4px 10px 16px;font-size:15px}
+nav button{display:flex;gap:10px;align-items:center;background:0;border:1px solid transparent;color:var(--mu);padding:9px 10px;font:600 13px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;cursor:pointer;text-align:left}
+nav button.on{background:var(--el);color:var(--tx);border-color:var(--bd);box-shadow:inset 3px 0 var(--pr)}
+nav button:hover{color:var(--tx)}
+main{flex:1;display:flex;flex-direction:column;min-width:0}
+header{min-height:48px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;padding:6px 16px;background:var(--b2)}
+header h2{font-size:15px;flex:1}
+#pg{flex:1;overflow:auto;padding:18px}
+h1{font-size:24px;font-weight:700}h3{font-size:13px;margin-bottom:10px;color:var(--sc)}
+.mu{color:var(--mu);font-size:12px}.g{display:grid;gap:14px;align-content:start}
+.dg{grid-template-columns:minmax(0,1fr) 300px}.g2{display:grid;grid-template-columns:230px minmax(0,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:var(--sf);border:1px solid var(--bd);padding:14px;position:relative}
+.card:after{content:"";position:absolute;right:-1px;top:-1px;width:7px;height:7px;background:var(--pr)}
+.card:before{content:"";position:absolute;left:-1px;bottom:-1px;width:4px;height:4px;background:var(--sc)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.gr{flex:1;min-width:0}
+.btn{background:var(--pr);color:#fff;border:0;padding:8px 14px;font:700 13px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;cursor:pointer;clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px)}
+.btn.ghost{background:var(--el);color:var(--sc)}.btn:hover{filter:brightness(1.15)}
+.ib{background:0;border:0;color:var(--mu);cursor:pointer;padding:4px 7px;font-size:14px}.ib:hover{color:var(--tx)}
+.chip{border:1px solid var(--bd);background:var(--b2);color:var(--sc);padding:3px 9px;font:600 12px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;cursor:pointer}
+.chip.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.h{color:var(--no)}.m{color:var(--sc)}.l{color:var(--ok)}
+input,select,textarea{background:var(--b2);border:1px solid var(--bd);color:var(--tx);padding:8px 10px;font:13px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;min-width:0;width:100%}
+input:focus,select:focus,textarea:focus,[contenteditable]:focus{outline:2px solid var(--pr);outline-offset:-1px}
+.row>input,.row>select{width:auto}.row>input.gr{width:0}
+input[type=range]{padding:0;accent-color:var(--pr)}textarea{min-height:70px;resize:vertical}
+label{display:block;font-size:12px;color:var(--mu);margin-top:10px}label input,label select,label textarea{margin-top:4px;color:var(--tx)}
+.it{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #2a2247}
+.it.dn .gr>div:first-child{text-decoration:line-through;color:var(--mu)}
+.ck{width:20px;height:20px;border:1px solid var(--sc);background:0;color:#fff;cursor:pointer;flex:none;font-size:12px;line-height:1;padding:0}
+.ck.on{background:var(--pr);border-color:var(--pr)}.ck.s{width:15px;height:15px;font-size:10px}
+.sub{display:flex;gap:7px;align-items:center;margin-top:5px;font-size:12px;color:var(--mu)}
+.sw{width:38px;height:20px;background:var(--b2);border:1px solid var(--bd);position:relative;cursor:pointer;flex:none;padding:0}
+.sw:after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;background:var(--mu)}
+.sw.on{background:var(--pr)}.sw.on:after{left:20px;background:#fff}
+.li{display:block;width:100%;text-align:left;background:0;border:0;border-left:2px solid transparent;color:var(--mu);padding:7px 8px;font:600 13px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;cursor:pointer;margin-top:4px}
+.li.on{border-color:var(--pr);color:var(--tx);background:var(--el)}
+.bar{height:8px;background:var(--b2);border:1px solid var(--bd)}.bar i{display:block;height:100%;background:var(--pr)}
+.ev{font-size:11px;padding:2px 5px;margin-top:3px;border-left:3px solid var(--pr);background:var(--el);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.ev.task{border-color:var(--sc)}.ev.deadline{border-color:var(--no)}.ev.class{border-color:var(--ok)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.cc{background:var(--sf);border:1px solid var(--bd);min-height:84px;padding:4px;cursor:pointer}.cc.t{border-color:var(--pr);box-shadow:inset 0 0 0 1px var(--pr)}
+.wk{overflow-x:auto}.wk .cal{min-width:620px}
+.tmv{font-size:44px;font-weight:700;letter-spacing:2px}
+.ov{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:9;padding:12px}
+.md{background:var(--sf);border:1px solid var(--sc);padding:18px;width:min(460px,100%);max-height:90vh;overflow:auto}
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--el);border:1px solid var(--sc);padding:9px 16px;z-index:10;font-weight:600}
+#cv{height:calc(100vh - 190px);min-height:320px;border:1px solid var(--bd);background:var(--b2);margin-top:10px}#wb{width:100%;height:100%;display:block;touch-action:none}
+.msg{padding:9px 12px;margin:6px 0;max-width:88%;border:1px solid var(--bd);background:var(--el)}.msg.u{margin-left:auto;background:var(--pr);border-color:var(--pr)}
+.ed{min-height:260px;background:var(--b2);border:1px solid var(--bd);padding:12px;line-height:1.6}
+body.cmp .card{padding:9px}body.cmp .it{padding:5px 0}
+@media(max-width:800px){#app{flex-direction:column-reverse}
+nav{width:100%;flex-direction:row;overflow-x:auto;border-right:0;border-top:1px solid var(--bd);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))}
+.logo{display:none}nav button{flex-direction:column;gap:2px;font-size:10px;padding:6px 9px;flex:none}
+#pg{padding:12px}.dg,.g2{grid-template-columns:1fr}.cc{min-height:54px}.ev{font-size:9px}.tmv{font-size:38px}
+.toast{bottom:90px}.btn,.chip,.ib{min-height:36px}#cv{height:calc(100vh - 330px)}}
+
+/* refinements */
+.g,.g2,.g3,.dg{gap:18px}.card{border-radius:14px;padding:20px}.card:before,.card:after{display:none}body.cmp .card{padding:14px}
+.row{gap:10px}.btn{clip-path:none;border-radius:9px;padding:10px 16px}.chip{border-radius:8px;padding:6px 12px}.ib{border-radius:8px;padding:6px 9px}
+nav{padding:16px 12px;gap:6px}nav button{border-radius:9px;padding:10px 12px}header{padding:8px 20px}#pg{padding:22px}
+input,select,textarea{border-radius:8px;padding:10px 12px}input[type=range]{padding:0;touch-action:pan-y}
+.it{padding:14px 0}.sub{margin-top:9px}label{margin-top:14px}h3{margin-bottom:14px}
+.ck{border-radius:6px}.sw{border-radius:10px}.sw:after{border-radius:50%}.li{border-radius:8px;padding:9px 10px}
+.cal{gap:6px}.cc{border-radius:8px;padding:6px}.ev{border-radius:4px;padding:3px 6px;margin-top:4px}.ev.rem{border-color:#FFD166}
+.bar{border-radius:6px;overflow:hidden}.md{border-radius:16px;padding:24px}.toast{border-radius:12px}#cv{border-radius:14px;overflow:hidden}.msg{border-radius:12px}.ed{border-radius:10px}
+@media(max-width:800px){#pg{padding:14px}nav{padding:6px}nav button{padding:6px 10px}.card{padding:16px}}
+
+/* typography: Outfit */
+button,input,select,textarea{font-family:inherit}
+h1,.tmv,.logo{font-weight:700}h2,h3{font-weight:600}b,strong{font-weight:600}
+.btn,.chip,nav button,.li{font-weight:600}.mu,label,.sub,.ev,.toast{font-weight:500}
+input,select,textarea{font-weight:400}
+
+/* AI UI */
+.dot{width:10px;height:10px;border-radius:50%;background:var(--mu);flex:none}.dot.w{background:#FFD166}
+.chip.cap{cursor:default;background:var(--el);padding:4px 10px}
+.kv{display:grid;grid-template-columns:minmax(120px,38%) minmax(0,1fr);gap:10px 14px;margin-top:14px;overflow-wrap:anywhere}
+.warnb{margin-top:12px;padding:10px 14px;border:1px solid #FFD166;border-radius:10px;background:var(--b2);color:var(--tx)}
+.ml{max-height:220px;overflow:auto;margin-top:6px;border:1px solid var(--bd);border-radius:10px;padding:6px;background:var(--b2)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.chat{display:flex;flex-direction:column;height:calc(100vh - 130px);min-height:480px}.chm{flex:1;min-height:0;overflow:auto;padding:6px 2px;margin-top:6px}
+.cl{max-height:calc(100vh - 300px);overflow:auto}.chh{padding-bottom:14px;border-bottom:1px solid var(--bd)}
+.msg{margin:12px 0;padding:12px 16px}.msg.u .mu{color:#ffffffcc}.msg .mb{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px}
+.empty{text-align:center;padding:28px 8px}.exg{display:grid;gap:10px;max-width:460px;margin:20px auto}.exg .chip{padding:10px 14px;text-align:left;font-size:13px}
+.inp{align-items:flex-end;margin-top:10px;flex-wrap:nowrap}.inp textarea{flex:1;width:0;min-height:44px;max-height:160px;resize:none}
+.dots{display:flex;gap:6px;padding:8px 0}.dots i{width:8px;height:8px;border-radius:50%;background:var(--sc);animation:bl 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+.cur{display:inline-block;width:7px;height:14px;background:var(--sc);margin-left:2px;vertical-align:-2px;animation:bl .8s infinite}
+@keyframes bl{0%,100%{opacity:.25}50%{opacity:1}}
+@media(max-width:800px){.chat{height:calc(100vh - 200px);min-height:440px}.cl{max-height:130px}.chh select{max-width:none;flex:1 1 100%}}
+main{min-height:0}#pg{min-height:0}
+.dot.ok{background:var(--ok)}.dot.bad{background:var(--no)}#syn{cursor:pointer}
+</style></head><body><div id="app"><nav id="nv"></nav><main><header><h2 id="ttl"></h2><button class="chip" id="syn" data-a="sync" title="Sync status">Local only</button><button class="btn" data-a="nt">+ Task</button></header><div id="pg"></div></main></div>
+<script>
+const $=s=>document.querySelector(s),g=i=>$('#'+i).value;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const iso=n=>{const d=new Date();d.setDate(d.getDate()+n);return fd(d)};
+const CATS=['School','Personal','Work'],DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const PG=[['dash','Dashboard','▦'],['tasks','Tasks','✓'],['cal','Calendar','▤'],['classes','Classes','◈'],['rem','Reminders','◷'],['wb','Whiteboard','✎'],['notes','Notes','❏'],['focus','Focus','◔'],['ai','AI','✦'],['set','Settings','⚙']];
+const def=()=>{const w=new Date().getDay();return{set:{name:'Alex',acc:'#7952FF',cmp:false,nt:true,nd:true,nc:true,snd:'Chime',vol:60,q:false,qs:'22:00',qe:'07:00',tone:'concise'},
+tasks:[{id:1,t:'Chemistry lab report',p:'high',c:'School',d:iso(1),done:false,subs:[{t:'Collect data',d:true},{t:'Write conclusion',d:false}]},{id:2,t:'Math problem set 7',p:'high',c:'School',d:iso(0),done:false,subs:[]},{id:3,t:'Read History chapter 12',p:'med',c:'School',d:iso(0),done:false,subs:[]},{id:4,t:'Pay club fees',p:'low',c:'Personal',d:iso(-1),done:false,subs:[]},{id:5,t:'Plan weekend trip',p:'low',c:'Personal',d:iso(4),done:false,subs:[]},{id:6,t:'Submit scholarship essay',p:'high',c:'Work',d:iso(6),done:false,subs:[{t:'Draft',d:true},{t:'Proofread',d:false}]},{id:7,t:'Buy lab notebook',p:'low',c:'Personal',d:iso(-2),done:true,subs:[]}],
+events:[{id:1,t:'Robotics club',date:iso(0),time:'16:30',ty:'event'},{id:2,t:'Physics midterm',date:iso(5),time:'09:00',ty:'deadline'},{id:3,t:'Study group',date:iso(2),time:'18:00',ty:'event'}],
+classes:[{id:1,n:'Chemistry',te:'Dr. Okafor',r:'Lab 2',day:w,time:'10:00',hw:[{t:'Lab report',d:false}],pre:[{t:'Bring goggles',d:false},{t:'Read lab guide',d:true}]},{id:2,n:'World History',te:'Ms. Lindqvist',r:'Room 114',day:(w+1)%7,time:'09:00',hw:[{t:'Chapter 12 notes',d:false}],pre:[{t:'Textbook',d:false}]},{id:3,n:'Calculus',te:'Mr. Tan',r:'Room 305',day:(w+2)%7,time:'13:00',hw:[],pre:[{t:'Calculator',d:false}]}],
+
+notes:[{id:1,t:'Study plan',b:'<h3>Midterm week</h3><ul><li>Physics formulas</li><li>Chem lab review</li></ul>',f:'School',tags:'exam, plan',pin:true},{id:2,t:'App ideas',b:'Habit tracker with <b>pixel</b> streaks.',f:'Ideas',tags:'ideas',pin:false},{id:3,t:'Trip packing',b:'Charger, passport, notebook.',f:'Personal',tags:'travel',pin:false}],
+sess:[1,1,2,3,3,5].map((d,i)=>({task:'Math problem set 7',min:25,at:Date.now()-d*864e5-i*36e5})),
+chats:[{id:1,title:'New chat',m:[{r:'a',t:'Hi, I am the DayFlow demo assistant. I run local scripted rules, not a real language model. Try a prompt below.'}]}],cc:1,wb:null}};
+let S,cur,TF={tab:'all',q:'',c:'',p:'',s:'date',gr:'none'},CAL={v:'month',o:0},NS={f:'All',q:'',id:null},T={m:'focus',left:1500,run:false,task:''},tick;
+const D={focus:1500,short:300,long:900};
+try{S=JSON.parse(localStorage.getItem('dayflow1'))}catch(e){}
+if(!S||!S.set)S=def();
+const persist=()=>{try{localStorage.setItem('dayflow1',JSON.stringify(S))}catch(e){}};const save=()=>{persist();if(typeof Sync!=='undefined'&&Sync&&Sync.touch)Sync.touch()};
+function skin(){document.documentElement.style.setProperty('--pr',S.set.acc);document.body.classList.toggle('cmp',!!S.set.cmp)}
+const t2m=t=>{const[h,m]=t.split(':');return+h*60+ +m};
+function quiet(){const s=S.set;if(!s.q)return false;const n=new Date(),m=n.getHours()*60+n.getMinutes(),a=t2m(s.qs),b=t2m(s.qe);return a>b?(m>=a||m<b):(m>=a&&m<b)}
+function beep(force,sn){sn=sn||S.set.snd;if(quiet()&&!force)return;try{const F={Soft:[523,659],Chime:[880,1175],Pixel:[440,660,880]}[sn],A=new(window.AudioContext||window.webkitAudioContext)();F.forEach((f,i)=>{const o=A.createOscillator(),v=A.createGain();o.type=sn=='Pixel'?'square':'sine';o.frequency.value=f;v.gain.value=S.set.vol/400;o.connect(v);v.connect(A.destination);o.start(A.currentTime+i*.18);o.stop(A.currentTime+i*.18+.16)})}catch(e){}}
+function toast(m,s){const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.append(e);setTimeout(()=>e.remove(),2600);if(s)beep()}
+const fld=(i,l,v,t='text')=>`<label>${l}<input id="${i}" type="${t}" value="${esc(v)}"></label>`;
+const sel=(i,l,o,v)=>`<label>${l}<select id="${i}">${o.map(x=>`<option ${x==v?'selected':''}>${x}</option>`).join('')}</select></label>`;
+function modal(title,body,ok,lb='Save'){const m=document.createElement('div');m.className='ov';m.innerHTML=`<div class="md"><h3>${title}</h3>${body}<div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn ghost" data-a="mx">Close</button>${ok?`<button class="btn" id="mok">${lb}</button>`:''}</div></div>`;document.body.append(m);if(ok)m.querySelector('#mok').onclick=()=>{if(ok()!==false)m.remove()}}
+const pc=p=>`<span class="${{high:'h',med:'m',low:'l'}[p]}">${p}</span>`;
+function items(ds){const dw=new Date(ds+'T00:00').getDay();return[...S.events.filter(e=>e.date==ds).map(e=>({t:e.t,time:e.time,ty:e.ty,id:e.id})),...S.tasks.filter(t=>t.d==ds&&!t.done).map(t=>({t:t.t,time:t.tm,ty:'task'})),...S.classes.filter(c=>c.days.includes(dw)).map(c=>({t:c.n+(c.r?' ('+c.r+')':''),time:c.st,ty:'class'})),...S.rem.filter(r=>occ(r,ds)).map(r=>({t:r.t,time:r.tm,ty:'rem'}))].sort((a,b)=>(a.time||'zz')<(b.time||'zz')?-1:1)}
+const evh=i=>`<div class="ev ${i.ty}" ${i.id?`data-a="ee" data-v="${i.id}"`:''}>${i.time||''} ${esc(i.t)}</div>`;
+/* ---------- tasks ---------- */
+const ti=t=>`<div class="it ${t.done?'dn':''}"><button class="ck ${t.done?'on':''}" data-a="tg" data-v="${t.id}" aria-label="Complete">${t.done?'✓':''}</button><div class="gr"><div>${esc(t.t)}</div>${t.desc?`<div class="mu">${esc(t.desc)}</div>`:''}<div class="mu">${pc(t.p)} · ${t.c} · ${t.d}${t.tm?' '+t.tm:''}${t.rec.k!='none'?' · ↻ '+recLbl(t.rec):''}${t.rm?' · ◷ '+t.rm:''}${t.d<iso(0)&&!t.done?' · <span class="h">overdue</span>':''}</div>${t.subs.map((s,i)=>`<div class="sub"><button class="ck s ${s.d?'on':''}" data-a="sb" data-v="${t.id}:${i}">${s.d?'✓':''}</button>${esc(s.t)}</div>`).join('')}</div><button class="ib" data-a="te" data-v="${t.id}">✎</button><button class="ib" data-a="td" data-v="${t.id}">✕</button></div>`;
+function taskM(id){const t=id?S.tasks.find(x=>x.id==id):{t:'',desc:'',p:'med',c:'School',d:iso(0),tm:'',rec:{k:'none',days:[]},rm:'',subs:[]},RM=['No reminder','Remind me at a set time'];
+modal(id?'Edit task':'New task',fld('mt','Title',t.t)+`<label>Description<textarea id="mds">${esc(t.desc)}</textarea></label>`+fld('md','Due date',t.d,'date')+fld('mtm','Due time (optional)',t.tm,'time')+sel('mp','Priority',['high','med','low'],t.p)+sel('mc','Category',CATS,t.c)+recF('t',t.rec)+sel('mrk','Reminder',RM,t.rm?RM[1]:RM[0])+fld('mrm','Reminder time',t.rm,'time')+`<label>Subtasks (one per line)<textarea id="ms">${esc(t.subs.map(s=>s.t).join('\n'))}</textarea></label>`,()=>{
+const v=g('mt').trim();if(!v)return toast('Enter a title'),false;if(!g('md'))return toast('Choose a due date'),false;const rec=readRec('t');if(!rec)return false;const on=g('mrk')==RM[1];if(on&&!g('mrm'))return toast('Choose a reminder time'),false;
+const subs=g('ms').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,d:!!(t.subs.find(o=>o.t==x)||{}).d})),o={t:v,desc:g('mds').trim(),d:g('md'),tm:g('mtm'),p:g('mp'),c:g('mc'),rec,rm:on?g('mrm'):'',subs};
+if(id)Object.assign(t,o);else S.tasks.push({id:Date.now(),done:false,...o});save();render()})}
+function eventM(id,date){const e=id?S.events.find(x=>x.id==id):{t:'',date:date||iso(0),time:'10:00',ty:'event'};modal(id?'Edit event':'New event',fld('et','Title',e.t)+fld('ed','Date',e.date,'date')+fld('em','Time',e.time,'time')+sel('ey','Type',['event','deadline'],e.ty)+(id?`<br><button class="btn ghost" data-a="evd" data-v="${id}">Delete event</button>`:''),()=>{if(!g('et').trim())return false;const o={t:g('et').trim(),date:g('ed'),time:g('em'),ty:g('ey')};if(id)Object.assign(e,o);else S.events.push({id:Date.now(),...o});save();render()})}
+/* ---------- recurrence, reminders ---------- */
+const RK=[['none','Does not repeat'],['daily','Every day'],['weekday','Every weekday'],['weekly','Every week'],['monthly','Every month'],['custom','Custom weekdays']],PO={high:0,med:1,low:2};
+const op=(a,v)=>a.map(([k,l])=>`<option value="${k}" ${k==v?'selected':''}>${l}</option>`).join('');
+const dlab=ds=>ds==iso(0)?'Today':ds==iso(1)?'Tomorrow':ds;
+const tm2=m=>String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0'),hhmm=d=>tm2(d.getHours()*60+d.getMinutes());
+const SF={date:(a,b)=>(a.d+(a.tm||''))<(b.d+(b.tm||''))?-1:1,priority:(a,b)=>PO[a.p]-PO[b.p]||SF.date(a,b),title:(a,b)=>a.t.localeCompare(b.t)};
+const occ=(r,ds)=>{const k=r.rec.k,a=new Date(r.d+'T00:00'),w=new Date(ds+'T00:00').getDay();if(k=='none')return ds==r.d;if(ds<r.d)return false;return k=='daily'||(k=='weekday'&&w>0&&w<6)||(k=='weekly'&&w==a.getDay())||(k=='monthly'&&ds.slice(8)==r.d.slice(8))||(k=='custom'&&r.rec.days.includes(w))};
+const nextD=(d,r,f)=>{for(let i=1;i<800;i++){const x=new Date(f+'T00:00');x.setDate(x.getDate()+i);const q=fd(x);if(occ({d,rec:r},q))return q}};
+const recLbl=r=>r.k=='custom'?r.days.map(i=>DOW[i]).join(' '):RK.find(x=>x[0]==r.k)[1].toLowerCase();
+const dayChips=(days,show)=>`<div class="row cd" style="margin-top:8px;display:${show?'flex':'none'}">${DOW.map((d,i)=>`<button type="button" class="chip ${days.includes(i)?'on':''}" data-a="dy" data-v="${i}">${d}</button>`).join('')}</div>`;
+const recF=(p,r)=>`<label>Repeat<select id="${p}rk" onchange="this.closest('.md').querySelector('.cd').style.display=this.value=='custom'?'flex':'none'">${op(RK,r.k)}</select></label>`+dayChips(r.days,r.k=='custom');
+const readDays=()=>[...document.querySelectorAll('.md .cd .chip.on')].map(b=>+b.dataset.v);
+const readRec=p=>{const k=g(p+'rk'),days=k=='custom'?readDays():[];if(k=='custom'&&!days.length){toast('Pick at least one weekday');return null}return{k,days}};
+const nextAt=r=>{const n=new Date();for(let i=0;i<=366;i++){const ds=iso(i);if(occ(r,ds)){const a=new Date(ds+'T'+r.tm);if(a>=n)return a}}return null};
+const nextCls=c=>{const n=new Date();for(let i=0;i<8;i++){const ds=iso(i);if(c.days.includes(new Date(ds+'T00:00').getDay())){const a=new Date(ds+'T'+c.st);if(a>=n)return{ds,at:a}}}return null};
+function mig(){S.ai=S.ai||defAI();S.chats.forEach(c=>{if(c.m.length==1&&!c.m[0].at&&c.m[0].r=='a')c.m=[]});S.rem=S.rem||[{id:1,t:'Submit physics lab',d:iso(1),tm:'17:30',rec:{k:'none',days:[]},snd:'Chime'},{id:2,t:'Weekly study review',d:iso(0),tm:'19:00',rec:{k:'weekly',days:[]},snd:'Soft'}];S.fired=S.fired||{};delete S.autos;delete S.ah;
+S.tasks.forEach(t=>{t.desc=t.desc||'';t.tm=t.tm||'';t.rec=t.rec||{k:'none',days:[]};t.rm=t.rm||''});
+S.classes.forEach(c=>{c.days=c.days||[c.day];c.st=c.st||c.time;c.en=c.en||tm2(t2m(c.st)+60);c.nt=c.nt||'';c.rb=c.rb||0;c.te=c.te||'';c.r=c.r||''})}
+function chk(){const n=new Date(),ds=fd(n),k=hhmm(n),s=S.set,due=x=>{const d=t2m(k)-t2m(x);return d>=0&&d<2};if(S.fday!=ds){S.fired={};S.fday=ds}
+const f=(id,m,on,sn)=>{if(!on||S.fired[id])return;S.fired[id]=1;save();toast(m);beep(0,sn);sysNotify(m)};
+S.rem.forEach(r=>occ(r,ds)&&due(r.tm)&&f('r'+r.id+r.tm,'Reminder: '+r.t,s.nt,r.snd));
+S.tasks.forEach(t=>!t.done&&t.rm&&t.d==ds&&due(t.rm)&&f('t'+t.id+t.rm,'Task reminder: '+t.t,s.nt));
+S.events.forEach(e=>e.ty=='deadline'&&e.date==ds&&due(e.time)&&f('e'+e.id+e.time,'Deadline: '+e.t,s.nd));
+S.classes.forEach(c=>c.rb&&c.days.includes(n.getDay())&&due(tm2(t2m(c.st)-c.rb))&&f('c'+c.id+c.st,c.n+' starts in '+c.rb+' min',s.nc))}
+V={};
+V.dash=()=>{const td=iso(0),h=new Date().getHours(),open=S.tasks.filter(t=>!t.done),T0=open.filter(t=>t.d<=td).sort(SF.date),pri=[...open].sort(SF.priority).slice(0,3),
+dls=[...open.filter(t=>t.d>td&&t.d<=iso(7)).map(t=>[t.d,t.t]),...S.events.filter(e=>e.ty=='deadline'&&e.date>=td&&e.date<=iso(7)).map(e=>[e.date,e.t])].sort(),
+evs=S.events.filter(e=>e.ty=='event'&&e.date>=td&&e.date<=iso(7)).sort((a,b)=>(a.date+a.time)<(b.date+b.time)?-1:1),
+rm=S.rem.map(r=>({r,at:nextAt(r)})).filter(x=>x.at).sort((a,b)=>a.at-b.at).slice(0,3),
+cl=S.classes.map(c=>({c,x:nextCls(c)})).filter(x=>x.x).sort((a,b)=>a.x.at-b.x.at).slice(0,3),
+due=S.tasks.filter(t=>t.d==td),dn=due.filter(t=>t.done).length,p=due.length?Math.round(dn/due.length*100):0,
+row=(a,b)=>`<div class="it"><div class="gr">${a}<div class="mu">${b}</div></div></div>`,no=m=>`<p class="mu">${m}</p>`;
+return`<div class="g dg"><div class="g"><div><h1>${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}, ${esc(S.set.name)}</h1><p class="mu">${new Date().toLocaleDateString('en',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</p></div>
+<div class="card"><div class="row"><input class="gr" id="qa" placeholder="Quick add a task for today..." data-en="qa"><button class="btn" data-a="qa">Add</button></div></div>
+<div class="card"><h3>Daily priorities</h3>${pri.map(ti).join('')||no('No open tasks.')}</div>
+<div class="card"><h3>Today's tasks</h3>${T0.map(ti).join('')||no('Nothing due. Add a task to plan your day.')}</div>
+<div class="card"><h3>Daily schedule</h3>${items(td).map(i=>`<div class="row"><span class="mu" style="width:44px">${i.time||'Due'}</span><div class="gr">${evh(i)}</div></div>`).join('')||no('No events today.')}</div>
+<div class="card"><h3>Upcoming deadlines</h3>${dls.map(([d,t])=>`<div class="row it"><span class="gr">${esc(t)}</span><span class="mu">${dlab(d)}</span></div>`).join('')||no('No deadlines this week.')}</div></div>
+<div class="g"><div class="card"><h3>Daily progress</h3><div class="bar"><i style="width:${p}%"></i></div><p class="mu" style="margin-top:10px">${dn}/${due.length} tasks due today done</p></div>
+<div class="card"><h3>Important reminders</h3>${rm.map(x=>row(esc(x.r.t),dlab(fd(x.at))+' '+hhmm(x.at))).join('')||no('No upcoming reminders.')}</div>
+<div class="card"><h3>Upcoming classes</h3>${cl.map(x=>row(esc(x.c.n),dlab(x.x.ds)+' '+x.c.st+(x.c.r?' · '+esc(x.c.r):''))).join('')||no('No classes scheduled.')}</div>
+<div class="card"><h3>Upcoming events</h3>${evs.map(e=>row(esc(e.t),dlab(e.date)+' '+e.time)).join('')||no('No events this week.')}</div>
+<div class="card"><h3>Focus</h3><div class="tmv">${fmt(T.left)}</div><div class="row" style="margin-top:12px"><button class="btn tbt" data-a="tt">${T.run?'Pause':'Start'}</button><a class="chip" href="#focus">Open</a></div></div>
+<div class="card"><h3>Ask the assistant</h3><div class="row"><input class="gr" id="dq" placeholder="Plan my day..." data-en="ask"><button class="btn" data-a="ask">Ask</button></div></div></div></div>`};
+V.tasks=()=>{const td=iso(0),TB={today:t=>!t.done&&t.d==td,up:t=>!t.done&&t.d>td,all:()=>true,done:t=>t.done,over:t=>!t.done&&t.d<td},NM={today:'Today',up:'Upcoming',all:'All',done:'Completed',over:'Overdue'};
+const L=S.tasks.filter(t=>TB[TF.tab](t)&&(!TF.c||t.c==TF.c)&&(!TF.p||t.p==TF.p)&&(!TF.q||t.t.toLowerCase().includes(TF.q.toLowerCase()))).sort(SF[TF.s]);
+const G=TF.gr=='status'?[['Overdue',L.filter(t=>!t.done&&t.d<td)],['Open',L.filter(t=>!t.done&&t.d>=td)],['Completed',L.filter(t=>t.done)]]:TF.gr=='priority'?['high','med','low'].map(p=>[p,L.filter(t=>t.p==p)]):[['',L]];
+const body=G.filter(x=>x[1].length).map(([n,a])=>(n?`<h3 style="margin-top:16px">${n} · ${a.length}</h3>`:'')+a.map(ti).join('')).join('');
+return`<div class="g"><div class="row">${Object.keys(NM).map(k=>`<button class="chip ${TF.tab==k?'on':''}" data-a="tab" data-v="${k}">${NM[k]} ${S.tasks.filter(TB[k]).length}</button>`).join('')}</div>
+<div class="row"><input class="gr" id="tq" data-s="q" placeholder="Search tasks" value="${esc(TF.q)}"><select id="tc" data-s="c">${op([['','All categories'],...CATS.map(c=>[c,c])],TF.c)}</select><select id="tp" data-s="p">${op([['','Any priority'],['high','high'],['med','med'],['low','low']],TF.p)}</select><select id="ts" data-s="s">${op([['date','Sort: due date'],['priority','Sort: priority'],['title','Sort: title']],TF.s)}</select><select id="tg" data-s="gr">${op([['none','No grouping'],['status','Group: status'],['priority','Group: priority']],TF.gr)}</select><button class="btn" data-a="nt">+ New task</button></div>
+<div class="card">${body||'<p class="mu">No tasks match. Change the filters or add a task.</p>'}</div></div>`};
+V.cal=()=>{const{v,o}=CAL,b=new Date();b.setHours(0,0,0,0);let h='',ti2;
+if(v=='month'){b.setDate(1);b.setMonth(b.getMonth()+o);ti2=b.toLocaleString('en',{month:'long',year:'numeric'});const y=b.getFullYear(),m=b.getMonth(),n=new Date(y,m+1,0).getDate();h='<div class="cal">'+DOW.map(d=>`<div class="mu">${d}</div>`).join('')+'<div></div>'.repeat(b.getDay());for(let d=1;d<=n;d++){const ds=fd(new Date(y,m,d)),it=items(ds);h+=`<div class="cc ${ds==iso(0)?'t':''}" data-a="nev" data-v="${ds}"><b>${d}</b>${it.slice(0,3).map(evh).join('')}${it.length>3?`<div class="mu">+${it.length-3} more</div>`:''}</div>`}h+='</div>'}
+else if(v=='week'){b.setDate(b.getDate()-b.getDay()+7*o);ti2='Week of '+b.toLocaleDateString('en',{month:'short',day:'numeric'});h='<div class="wk"><div class="cal">';for(let i=0;i<7;i++){const d=new Date(b);d.setDate(d.getDate()+i);const ds=fd(d);h+=`<div class="cc ${ds==iso(0)?'t':''}" style="min-height:220px" data-a="nev" data-v="${ds}"><b>${DOW[i]} ${d.getDate()}</b>${items(ds).map(evh).join('')}</div>`}h+='</div></div>'}
+else if(v=='day'){b.setDate(b.getDate()+o);const ds=fd(b);ti2=b.toLocaleDateString('en',{weekday:'long',month:'long',day:'numeric'});h=`<div class="card">${items(ds).map(i=>`<div class="row"><span class="mu" style="width:44px">${i.time||'Due'}</span><div class="gr">${evh(i)}</div></div>`).join('')||'<p class="mu">Nothing scheduled. Add an event.</p>'}<br><button class="btn ghost" data-a="nev" data-v="${ds}">+ Event on this day</button></div>`}
+else{ti2='Next 21 days';h='<div class="card">';for(let i=0;i<21;i++){const ds=iso(i),it=items(ds);if(it.length)h+=`<h3 style="margin-top:8px">${ds}</h3>${it.map(evh).join('')}`}h+='</div>'}
+return`<div class="g"><div class="row">${['month','week','day','agenda'].map(k=>`<button class="chip ${v==k?'on':''}" data-a="cv" data-v="${k}">${k}</button>`).join('')}<span class="gr"></span>${v!='agenda'?`<button class="ib" data-a="cn" data-v="-1">◀</button><button class="chip" data-a="cn" data-v="0">Today</button><button class="ib" data-a="cn" data-v="1">▶</button>`:''}<button class="btn" data-a="nev" data-v="">+ Event</button></div><h1>${ti2}</h1><div class="row mu"><span class="ev">event</span><span class="ev task">task due</span><span class="ev deadline">deadline</span><span class="ev class">class</span><span class="ev rem">reminder</span></div>${h}</div>`};
+V.classes=()=>`<div class="g"><div><button class="btn" data-a="nc2">+ Add class</button></div><div class="g3">${S.classes.map(c=>{const nx=nextCls(c);return`<div class="card"><div class="row"><h3 class="gr" style="font-size:15px;color:var(--tx);margin:0">${esc(c.n)}</h3><button class="ib" data-a="cx" data-v="${c.id}">✎</button><button class="ib" data-a="dc" data-v="${c.id}">✕</button></div><p class="mu">${c.days.map(i=>DOW[i]).join(', ')} · ${c.st}–${c.en}${c.te?' · '+esc(c.te):''}</p>${c.r?`<p class="mu">${esc(c.r)}</p>`:''}${c.nt?`<p class="mu">${esc(c.nt)}</p>`:''}<p class="mu">${c.rb?c.rb+' min reminder':'No reminder'}${nx?' · Next: '+dlab(nx.ds)+' '+c.st:''}</p>${['hw','pre'].map(k=>`<h3 style="margin-top:16px">${k=='hw'?'Homework':'Preparation checklist'}</h3>${c[k].map((x,i)=>`<div class="sub"><button class="ck s ${x.d?'on':''}" data-a="ct" data-v="${c.id}:${k}:${i}">${x.d?'✓':''}</button>${esc(x.t)}</div>`).join('')}<div class="row" style="margin-top:8px"><input class="gr" id="ci${c.id}${k}" data-en="ci" data-v="${c.id}:${k}" placeholder="Add item"><button class="chip" data-a="ci" data-v="${c.id}:${k}">Add</button></div>`).join('')}</div>`}).join('')}</div></div>`;
+function classM(id){const c=id?S.classes.find(x=>x.id==id):{n:'',te:'',r:'',st:'',en:'',days:[],nt:'',rb:0},RB=[[0,'No reminder'],[5,'5 minutes before'],[10,'10 minutes before'],[15,'15 minutes before'],[30,'30 minutes before'],[60,'1 hour before']];
+modal(id?'Edit class':'New class',fld('cn','Class name',c.n)+fld('ct','Teacher (optional)',c.te)+fld('cr','Location or meeting link',c.r)+fld('cs','Start time',c.st,'time')+fld('ce','End time',c.en,'time')+'<label>Repeats on</label>'+dayChips(c.days,true)+`<label>Reminder<select id="crb">${op(RB,c.rb)}</select></label><label>Notes<textarea id="cnt">${esc(c.nt)}</textarea></label>`,()=>{
+const days=readDays();if(!g('cn').trim())return toast('Enter a class name'),false;if(!g('cs')||!g('ce'))return toast('Choose a start and end time'),false;if(g('ce')<=g('cs'))return toast('End time must be after start time'),false;if(!days.length)return toast('Pick at least one day'),false;
+const o={n:g('cn').trim(),te:g('ct').trim(),r:g('cr').trim(),st:g('cs'),en:g('ce'),days,nt:g('cnt').trim(),rb:+g('crb')};if(id)Object.assign(c,o);else S.classes.push({id:Date.now(),hw:[],pre:[],...o});save();render()})}
+V.rem=()=>{const L=S.rem.map(r=>({r,at:nextAt(r)})),up=L.filter(x=>x.at).sort((a,b)=>a.at-b.at),ex=L.filter(x=>!x.at),
+row=({r,at})=>`<div class="it"><div class="gr">${esc(r.t)}<div class="mu">${at?dlab(fd(at)):r.d} ${r.tm} · ${recLbl(r.rec)} · ${r.snd}</div></div><button class="ib" data-a="er" data-v="${r.id}">✎</button><button class="ib" data-a="rd" data-v="${r.id}">✕</button></div>`;
+return`<div class="g"><div><button class="btn" data-a="nr">+ New reminder</button></div><div class="card"><h3>Upcoming reminders</h3>${up.map(row).join('')||'<p class="mu">No upcoming reminders. Create one and choose an exact time.</p>'}</div>${ex.length?`<div class="card"><h3>Past one-time reminders</h3>${ex.map(row).join('')}</div>`:''}<p class="mu">Reminders show a message and play a sound while DayFlow is open. Background push notifications need a backend.</p></div>`};
+function remM(id){const r=id?S.rem.find(x=>x.id==id):{t:'',d:iso(0),tm:'',rec:{k:'none',days:[]},snd:S.set.snd};
+modal(id?'Edit reminder':'New reminder',fld('rt','Title',r.t)+fld('rdt','Date',r.d,'date')+fld('rtm','Time',r.tm,'time')+recF('r',r.rec)+sel('rsn','Sound',['Soft','Chime','Pixel'],r.snd),()=>{
+if(!g('rt').trim())return toast('Enter a title'),false;if(!g('rdt'))return toast('Choose a date'),false;if(!g('rtm'))return toast('Choose a time for the reminder'),false;const rec=readRec('r');if(!rec)return false;
+const o={t:g('rt').trim(),d:g('rdt'),tm:g('rtm'),rec,snd:g('rsn')};if(id)Object.assign(r,o);else S.rem.push({id:Date.now(),...o});save();render()})}
+/* ---------- whiteboard ---------- */
+const WB={o:[],u:[],r:[],tool:'pen',col:'#B29AFF',v:{x:0,y:0,z:1},cur:null,pan:null};
+V.wb=()=>{const T2=[['pen','Pen'],['eraser','Eraser'],['r','Rect'],['e','Ellipse'],['l','Connector'],['s','Sticky'],['t','Text'],['pan','Pan']];
+return`<div class="g"><div class="row">${T2.map(([k,l])=>`<button class="chip ${WB.tool==k?'on':''}" data-a="wt" data-v="${k}">${l}</button>`).join('')}<span class="mu">|</span>${['#B29AFF','#5EE0A0','#FF6B8B','#FFD166','#F5F1FF'].map(c=>`<button class="chip ${WB.col==c?'on':''}" data-a="wc" data-v="${c}" style="background:${c};width:22px;height:22px;padding:0" aria-label="Color"></button>`).join('')}<span class="mu">|</span><button class="chip" data-a="wu">Undo</button><button class="chip" data-a="wr">Redo</button><button class="chip" data-a="wz" data-v="1.2">Zoom +</button><button class="chip" data-a="wz" data-v="0.8">Zoom −</button><button class="chip" data-a="wx">Clear</button></div><div class="row"><input class="gr" id="wbt" value="${esc(WB.txt||'Idea')}" placeholder="Text for sticky or text tool"><span class="mu">Sticky/Text: type, then click the canvas. Wheel zooms. Pan tool drags.</span></div><div id="cv"><canvas id="wb"></canvas></div></div>`};
+const wp=e=>{const r=$('#wb').getBoundingClientRect();return[(e.clientX-r.left-WB.v.x)/WB.v.z,(e.clientY-r.top-WB.v.y)/WB.v.z]};
+const snap=()=>{WB.u.push(JSON.stringify(WB.o));if(WB.u.length>50)WB.u.shift();WB.r=[]};
+function bb(o){if(o.k=='p'){const X=o.pts.map(p=>p[0]),Y=o.pts.map(p=>p[1]);return[Math.min(...X),Math.min(...Y),Math.max(...X),Math.max(...Y)]}if(o.k=='s')return[o.x,o.y,o.x+140,o.y+100];if(o.k=='t')return[o.x,o.y-18,o.x+o.s.length*9,o.y+4];return[Math.min(o.x1,o.x2),Math.min(o.y1,o.y2),Math.max(o.x1,o.x2),Math.max(o.y1,o.y2)]}
+function dr(x,o){x.strokeStyle=x.fillStyle=o.col;x.lineWidth=3;x.lineJoin='round';x.font='16px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif';
+if(o.k=='p'){x.beginPath();o.pts.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.stroke()}
+else if(o.k=='r')x.strokeRect(o.x1,o.y1,o.x2-o.x1,o.y2-o.y1);
+else if(o.k=='e'){x.beginPath();x.ellipse((o.x1+o.x2)/2,(o.y1+o.y2)/2,Math.abs(o.x2-o.x1)/2,Math.abs(o.y2-o.y1)/2,0,0,7);x.stroke()}
+else if(o.k=='l'){x.beginPath();x.moveTo(o.x1,o.y1);x.lineTo(o.x2,o.y2);const a=Math.atan2(o.y2-o.y1,o.x2-o.x1);x.lineTo(o.x2-12*Math.cos(a-.4),o.y2-12*Math.sin(a-.4));x.moveTo(o.x2,o.y2);x.lineTo(o.x2-12*Math.cos(a+.4),o.y2-12*Math.sin(a+.4));x.stroke()}
+else if(o.k=='s'){x.fillRect(o.x,o.y,140,100);x.fillStyle='#080711';x.font='500 14px Outfit,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif';let ln='',y=o.y+24;o.s.split(' ').forEach(w=>{if((ln+w).length>15){x.fillText(ln,o.x+10,y);y+=19;ln=''}ln+=w+' '});x.fillText(ln,o.x+10,y)}
+else if(o.k=='t')x.fillText(o.s,o.x,o.y)}
+function draw(){const c=$('#wb');if(!c)return;const x=c.getContext('2d'),d=devicePixelRatio||1,{x:vx,y:vy,z}=WB.v;x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,c.width,c.height);x.setTransform(z*d,0,0,z*d,vx*d,vy*d);x.fillStyle='#403568';const sp=40,x0=Math.floor(-vx/z/sp)*sp,y0=Math.floor(-vy/z/sp)*sp;for(let i=x0;i<x0+c.width/d/z+sp;i+=sp)for(let j=y0;j<y0+c.height/d/z+sp;j+=sp)x.fillRect(i,j,2,2);[...WB.o,WB.cur].filter(Boolean).forEach(o=>dr(x,o))}
+function wbInit(){const c=$('#wb'),r=$('#cv');if(!c)return;if(!WB.o.length&&S.wb)WB.o=S.wb;if(!WB.o.length&&!S.wb)WB.o=[{k:'s',x:40,y:40,s:'Welcome to the DayFlow whiteboard',col:'#FFD166'},{k:'s',x:260,y:80,s:'Drag with Pen, add shapes',col:'#5EE0A0'},{k:'l',x1:180,y1:90,x2:260,y2:120,col:'#B29AFF'}];c.width=r.clientWidth*(devicePixelRatio||1);c.height=r.clientHeight*(devicePixelRatio||1);
+c.onpointerdown=e=>{c.setPointerCapture(e.pointerId);const[px,py]=wp(e),t=WB.tool;WB.txt=g('wbt');if(t=='pan'){WB.pan=[e.clientX-WB.v.x,e.clientY-WB.v.y]}else if(t=='eraser'){snap();er(px,py)}else if(t=='s'||t=='t'){snap();WB.o.push({k:t,x:px,y:py,s:WB.txt||'Idea',col:t=='s'?'#FFD166':WB.col});fin()}else{snap();WB.cur=t=='pen'?{k:'p',pts:[[px,py]],col:WB.col}:{k:t,x1:px,y1:py,x2:px,y2:py,col:WB.col}}draw()};
+c.onpointermove=e=>{if(WB.pan){WB.v.x=e.clientX-WB.pan[0];WB.v.y=e.clientY-WB.pan[1];draw();return}if(e.buttons&&WB.tool=='eraser'){const[px,py]=wp(e);er(px,py);draw()}if(!WB.cur)return;const[px,py]=wp(e);if(WB.cur.k=='p')WB.cur.pts.push([px,py]);else{WB.cur.x2=px;WB.cur.y2=py}draw()};
+c.onpointerup=()=>{WB.pan=null;if(WB.cur){WB.o.push(WB.cur);WB.cur=null;fin()}};
+c.onwheel=e=>{e.preventDefault();const r2=c.getBoundingClientRect(),f=e.deltaY<0?1.1:.9,mx=e.clientX-r2.left,my=e.clientY-r2.top;zoom(f,mx,my)};draw()}
+function er(px,py){const m=8/WB.v.z,n=WB.o.length;WB.o=WB.o.filter(o=>{const b=bb(o);return!(px>=b[0]-m&&px<=b[2]+m&&py>=b[1]-m&&py<=b[3]+m)});if(WB.o.length!=n)fin()}
+function fin(){S.wb=WB.o;save();draw()}
+function zoom(f,mx,my){const c=$('#wb');mx=mx??c.clientWidth/2;my=my??c.clientHeight/2;const z=Math.min(4,Math.max(.25,WB.v.z*f)),k=z/WB.v.z;WB.v.x=mx-(mx-WB.v.x)*k;WB.v.y=my-(my-WB.v.y)*k;WB.v.z=z;draw()}
+/* ---------- notes ---------- */
+V.notes=()=>{const L=S.notes.filter(n=>(NS.f=='All'||n.f==NS.f)&&(!NS.q||(n.t+n.b+n.tags).toLowerCase().includes(NS.q.toLowerCase()))).sort((a,b)=>b.pin-a.pin),n=S.notes.find(x=>x.id==NS.id)||L[0],FO=['All','School','Personal','Ideas'];if(n)NS.id=n.id;
+return`<div class="g2"><div class="g"><button class="btn" data-a="nn">+ New note</button><input id="nq" data-s="nq" placeholder="Search notes and tags" value="${esc(NS.q)}"><div class="card">${FO.map(f=>`<button class="li ${NS.f==f?'on':''}" data-a="nf" data-v="${f}">${f} ${f=='All'?S.notes.length:S.notes.filter(x=>x.f==f).length}</button>`).join('')}</div><div class="card">${L.map(x=>`<button class="li ${n&&x.id==n.id?'on':''}" data-a="no" data-v="${x.id}">${x.pin?'★ ':''}${esc(x.t||'Untitled')}<div class="mu">${esc(x.tags)}</div></button>`).join('')||'<p class="mu">No notes found.</p>'}</div></div>
+${n?`<div class="card"><div class="row"><input class="gr" data-n="t" value="${esc(n.t)}" placeholder="Title" style="font-weight:700"><button class="chip" data-a="np" data-v="${n.id}">${n.pin?'Unpin':'Pin'}</button><button class="chip" data-a="ndl" data-v="${n.id}">Delete</button></div><div class="row" style="margin:8px 0"><select data-n="f">${FO.slice(1).map(f=>`<option ${n.f==f?'selected':''}>${f}</option>`).join('')}</select><input class="gr" data-n="tags" value="${esc(n.tags)}" placeholder="tags, comma separated"></div><div class="row" style="margin-bottom:8px">${[['bold','B'],['italic','I'],['h','H'],['insertUnorderedList','• List']].map(([c,l])=>`<button class="chip" onmousedown="event.preventDefault()" data-a="fm" data-v="${c}">${l}</button>`).join('')}</div><div class="ed" contenteditable="true" data-n="b">${n.b}</div></div>`:'<div class="card"><p class="mu">Create a note to start writing.</p></div>'}</div>`};
+/* ---------- focus ---------- */
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function startT(){if(T.run)return;T.run=true;tick=setInterval(()=>{T.left--;if(T.left<=0)fin2();uT()},1000);uT()}
+function fin2(){clearInterval(tick);T.run=false;if(T.m=='focus'){S.sess.push({task:T.task||'Unassigned',min:25,at:Date.now()});save();T.m='short';toast('Focus session logged. Take a break.',1)}else{T.m='focus';toast('Break over. Ready to focus.',1)}T.left=D[T.m];render()}
+function uT(){document.querySelectorAll('.tmv').forEach(e=>e.textContent=fmt(T.left));document.querySelectorAll('.tbt').forEach(e=>e.textContent=T.run?'Pause':'Start')}
+V.focus=()=>{const tdy=S.sess.filter(s=>new Date(s.at).toDateString()==new Date().toDateString()),bars=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return[DOW[d.getDay()],S.sess.filter(s=>new Date(s.at).toDateString()==d.toDateString()).reduce((a,s)=>a+s.min,0)]});
+return`<div class="g g2" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)"><div class="card"><div class="row">${[['focus','Focus 25'],['short','Short break 5'],['long','Long break 15']].map(([k,l])=>`<button class="chip ${T.m==k?'on':''}" data-a="tm" data-v="${k}">${l}</button>`).join('')}</div><div class="tmv" style="margin:18px 0">${fmt(T.left)}</div><label>Working on<select id="ft" data-f="1"><option value="">Unassigned</option>${S.tasks.filter(t=>!t.done).map(t=>`<option ${T.task==t.t?'selected':''}>${esc(t.t)}</option>`).join('')}</select></label><div class="row" style="margin-top:14px"><button class="btn tbt" data-a="tt">${T.run?'Pause':'Start'}</button><button class="btn ghost" data-a="tr">Reset</button><button class="chip" data-a="tf">Finish now</button></div></div>
+<div class="g"><div class="card"><h3>Statistics</h3><p>${tdy.length} sessions · ${tdy.reduce((a,s)=>a+s.min,0)} min today · ${S.sess.length} total</p><div class="row" style="align-items:flex-end;height:90px;margin-top:10px">${bars.map(([d,m])=>`<div class="gr" style="text-align:center"><div style="height:${Math.max(3,m*1.4)}px;background:var(--pr)"></div><span class="mu">${d}</span></div>`).join('')}</div></div><div class="card"><h3>Session history</h3>${[...S.sess].reverse().slice(0,8).map(s=>`<div class="it"><div class="gr">${esc(s.task)}<div class="mu">${s.min} min · ${new Date(s.at).toLocaleString()}</div></div></div>`).join('')}</div></div></div>`};
+/* ---------- AI (scripted) ---------- */
+const EX=['Help me organize my homework.','Create a study schedule for tomorrow.','Break this assignment into smaller tasks.','Summarize my upcoming deadlines.','Help me prioritize today\'s tasks.'];
+function aiReply(q){q=q.toLowerCase();const pre=S.set.tone=='friendly'?'Happy to help! ':'',open=S.tasks.filter(t=>!t.done).sort((a,b)=>a.d<b.d?-1:1);
+if(/priorit|summar|deadline/.test(q)){const a=open.slice(0,3).map(t=>t.t+' ('+t.d+')');return{t:pre+(a.length?'Top priorities by due date: '+a.join('; ')+'.':'You have no open tasks.')}}
+if(/plan|schedule|day/.test(q))return{t:pre+'Here is a plan based on your earliest open tasks.',sch:[['09:00','Deep work: '+(open[0]?open[0].t:'Study')],['11:30','Review class notes'],['15:00',open[1]?open[1].t:'Homework block']]};
+if(/task|homework|todo|add/.test(q))return{t:pre+'I propose these tasks:',tasks:[{t:'Finish homework set',p:'high',c:'School'},{t:'Review tomorrow\'s classes',p:'med',c:'School'}]};
+return{t:pre+'I only understand planning, tasks and priority prompts. This is a local scripted demo with no language model.'}}
+/* ---------- AI: data model (frontend only, no network) ---------- */
+/* DEMO catalogue. Not fetched from any provider. Unknown values are null and shown as "Not available". */
+const DEMO_MODELS={vyceai:[
+{id:'deepseek-v4.1',name:'DeepSeek V4.1 Flash',ctx:null,maxOut:null,pin:null,pout:null,tools:null,vision:null,stream:null},
+{id:'demo-small',name:'Demo Model Small',ctx:32000,maxOut:4096,pin:0.1,pout:0.4,tools:false,vision:false,stream:true,demo:1},
+{id:'demo-vision',name:'Demo Model Vision',ctx:128000,maxOut:8192,pin:1,pout:3,tools:true,vision:true,stream:true,demo:1},
+{id:'demo-large',name:'Demo Model Large',ctx:200000,maxOut:16000,pin:12,pout:36,tools:true,vision:true,stream:true,demo:1}]};
+const defAI=()=>({prov:[{id:'vyceai',name:'VyceAI',url:'https://vyceai.com/v1',model:'deepseek-v4.1',mname:'DeepSeek V4.1 Flash'}],cur:'vyceai',def:'vyceai',auto:false,lim:'',warn:80,et:10000,eo:2000});
+const KEYS={},AIUI={q:'',ms:'',mid:'',pend:null,draft:'',files:[],busy:0,live:'',cid:0,tm:null},ST0={v:'gen'};
+const ap=()=>S.ai.prov.find(x=>x.id==S.ai.cur)||S.ai.prov[0],mods=p=>Sync.models[p.id]||DEMO_MODELS[p.id]||[];
+const cm0=p=>mods(p).find(m=>m.id==p.model)||(p.model?{id:p.model,name:p.mname||p.model,manual:1}:null);const cm=p=>{const m=cm0(p);return m&&p.price_in!=null&&p.price_out!=null?{...m,pin:p.price_in,pout:p.price_out}:m};
+const epu=p=>p.url.replace(/\/+$/,'')+'/chat/completions',okUrl=u=>/^https?:\/\/[^\s\/$.?#][^\s]*$/i.test(u);
+const isHi=m=>!!m&&m.pin!=null&&m.pout!=null&&m.pin+m.pout>=20,usd=v=>v==null?'Not available':'$'+v.toFixed(v<.01?5:3)+' (est.)';
+const na=v=>v==null?'<span class="mu">Not available</span>':v,yn=v=>v==null?'<span class="mu">Unknown</span>':v?'Yes':'No';
+function minfo(m,p){if(!m)return'<p class="mu">No model selected.</p>';const caps=[m.tools&&'Tools',m.vision&&'Vision',m.stream&&'Streaming',m.ctx>=128000&&'Long Context'].filter(Boolean);
+return`<div class="row">${caps.map(c=>`<span class="chip cap">${c}</span>`).join('')||'<span class="mu">No capability information available</span>'}</div><div class="kv"><span class="mu">Display name</span><span>${esc(m.name)}</span><span class="mu">Model ID</span><span>${esc(m.id)}</span><span class="mu">Provider</span><span>${esc(p.name)}</span><span class="mu">Input price</span><span>${na(m.pin==null?null:'$'+m.pin+' / 1M tokens (est.)')}</span><span class="mu">Output price</span><span>${na(m.pout==null?null:'$'+m.pout+' / 1M tokens (est.)')}</span><span class="mu">Context window</span><span>${na(m.ctx==null?null:m.ctx.toLocaleString()+' tokens')}</span><span class="mu">Max output</span><span>${na(m.maxOut==null?null:m.maxOut.toLocaleString()+' tokens')}</span><span class="mu">Streaming</span><span>${yn(m.stream)}</span><span class="mu">Tool calling</span><span>${yn(m.tools)}</span><span class="mu">Vision</span><span>${yn(m.vision)}</span></div>${m.demo?'<p class="mu" style="margin-top:10px">DEMO values for visual preview only. Not real specifications or prices.</p>':m.manual?'<p class="mu" style="margin-top:10px">Entered manually. Capabilities and pricing are unknown.</p>':(m.live?'<p class="mu" style="margin-top:10px">Only fields reported by the provider are shown.</p>':'<p class="mu" style="margin-top:10px">Specifications are not available until the model list is loaded from the provider.</p>')}`}
+const mlHTML=()=>{const p=ap(),q=(AIUI.ms||'').toLowerCase(),on=AIUI.pend?AIUI.pend.id:p.model;return mods(p).filter(m=>(m.name+m.id).toLowerCase().includes(q)).map(m=>`<button class="li ${m.id==on?'on':''}" data-a="mp" data-v="${esc(m.id)}">${esc(m.name)}${m.demo?' <span class="mu">DEMO</span>':''}<div class="mu">${esc(m.id)}</div></button>`).join('')||'<p class="mu">No models match. Enter a Model ID manually below.</p>'};
+const mlUpd=()=>{const e=$('#ml');if(e)e.innerHTML=mlHTML()};
+const ceHTML=()=>{const a=S.ai,m=cm(ap()),ci=m&&m.pin!=null?a.et/1e6*m.pin:null,co=m&&m.pout!=null?a.eo/1e6*m.pout:null,tot=ci!=null&&co!=null?ci+co:null,lim=parseFloat(a.lim);
+return`<div class="kv"><span class="mu">Estimated input cost</span><span>${usd(ci)}</span><span class="mu">Estimated output cost</span><span>${usd(co)}</span><span class="mu">Total estimated</span><b>${usd(tot)}</b></div>`+(!m?'<p class="warnb">No model selected.</p>':isHi(m)?'<p class="warnb">This model looks expensive (combined price at or above $20 per 1M tokens, an arbitrary DayFlow demo threshold). Estimates only.</p>':m.pin==null||m.pout==null?'<p class="warnb">Pricing is not available for this model, so its cost cannot be estimated.</p>':'')+(tot!=null&&lim>0&&tot>lim*a.warn/100?'<p class="warnb">This sample alone is above your warning threshold.</p>':'')};
+const ceUpd=()=>{const e=$('#ce');if(e)e.innerHTML=ceHTML()};
+const stTxt=()=>{const p=ap();if(Sync.user){if(!p.hasKey)return'No API key saved';if(p.test)return p.test.ok?'Connection OK (tested '+new Date(p.test.at).toLocaleTimeString()+')':'Last test failed: '+p.test.msg;return'Key saved, not tested'}return KEYS[p.id]?'Not tested (no connection check has run)':'No API key entered'};const dotCls=()=>{const p=ap();if(Sync.user)return p.test?(p.test.ok?'dot ok':'dot bad'):p.hasKey?'dot w':'dot';return 'dot'+(KEYS[p.id]?' w':'')};
+function stat(){const e=$('#pst');if(!e)return;e.textContent=stTxt();$('#pdot').className=dotCls()}
+/* ---------- AI Settings ---------- */
+V.aiset=()=>{const a=S.ai,p=ap(),m=cm(p),pend=AIUI.pend;
+return`<div class="g" style="max-width:920px"><p class="mu">${Sync.user?'Connected to your DayFlow server. Models load from your provider; the built-in list is DEMO data until you press Refresh models.':'Not signed in: this page is a local preview. Sign in (Settings, General, Account) to save keys and use real models.'}</p>
+<div class="card"><h3>Provider configuration</h3><label style="margin-top:0">Active provider<select data-ai="prov">${a.prov.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}${x.id==a.def?' (default)':''}</option>`).join('')}</select></label>
+${keyBlock(p)}
+<div class="row" style="margin:16px 0"><span class="${dotCls()}" id="pdot"></span><span id="pst">${stTxt()}</span><button class="chip" data-a="tc">Test connection</button><span class="mu">${Sync.user?(p.hasKey?'Contacts the provider through your server':'Save a key first'):'Sign in to test'}</span></div>
+${a.prov.map(x=>`<div class="it"><div class="gr"><b>${esc(x.name)}</b> ${x.id==a.def?'<span class="chip cap">Default</span> ':''}${x.id==p.id?'<span class="chip cap">Selected</span>':''}<div class="mu">${esc(x.url)} · model: ${esc(x.mname||x.model||'none')}</div><div class="mu">Future endpoint: ${esc(epu(x))}</div></div><div class="row"><button class="chip" data-a="psel" data-v="${x.id}">Select</button><button class="chip" data-a="pe" data-v="${x.id}">Edit</button>${x.id!=a.def?`<button class="chip" data-a="pd" data-v="${x.id}">Make default</button>`:''}<button class="chip" data-a="pr" data-v="${x.id}">Remove</button></div></div>`).join('')}
+<div class="row" style="margin-top:16px"><button class="btn" data-a="pa">+ Add provider</button></div></div>
+<div class="card"><h3>Model selection</h3><div class="row" style="margin-bottom:14px"><div class="gr"><div class="mu">Selected for ${esc(p.name)}</div><div style="font-size:18px;font-weight:600">${esc(m?m.name:'No model selected')}</div></div><button class="chip" data-a="mr">Refresh models</button></div>${minfo(m,p)}
+<p class="mu" style="margin:6px 0 0">${Sync.models[p.id]?'List loaded from '+esc(p.name)+' through your server.':'Showing the built-in DEMO list. Sign in, save a key and press Refresh models to load the real list.'}${p.model?(p.verified?' Model ID found in the provider list.':' Model ID not verified yet.'):''}</p>
+<label>Search models<input id="msr" data-ai="ms" placeholder="Search by name or ID" value="${esc(AIUI.ms)}"></label><div id="ml" class="ml">${mlHTML()}</div>
+<label>Or enter a Model ID manually<div class="row"><input class="gr" id="mid" data-ai="mid" placeholder="e.g. deepseek-v4.1" value="${esc(AIUI.mid)}"><button class="chip" data-a="mm">Use ID</button></div></label>
+<div class="row" style="margin-top:16px"><span class="gr mu">${pend?'Pending: <b>'+esc(pend.name)+'</b> ('+esc(pend.id)+'). Not applied until you confirm.':'No pending change.'}</span><button class="btn" data-a="mc" ${pend?'':'disabled style="opacity:.5;cursor:not-allowed"'}>Confirm selection</button></div></div>
+<div class="card"><h3>Usage and cost protection</h3><p>Active model: <b>${esc(m?m.name:'None')}</b> <span class="mu">on ${esc(p.name)}</span></p>
+<div class="row" style="margin-top:12px"><label class="gr" style="margin:0">Sample input tokens<input type="number" min="0" data-ai="et" value="${a.et}"></label><label class="gr" style="margin:0">Sample output tokens<input type="number" min="0" data-ai="eo" value="${a.eo}"></label></div>
+<div class="row" style="margin-top:12px"><label class="gr" style="margin:0">Your input price (USD per 1M tokens)<input type="number" min="0" step="any" data-ai="pi" placeholder="Unknown" value="${p.price_in==null?'':p.price_in}"></label><label class="gr" style="margin:0">Your output price (USD per 1M tokens)<input type="number" min="0" step="any" data-ai="po" placeholder="Unknown" value="${p.price_out==null?'':p.price_out}"></label></div><p class="mu" style="margin-top:6px">Prices are entered by you. DayFlow does not know real prices.</p>
+<div id="ce" style="margin-top:12px">${ceHTML()}</div>
+<div class="row" style="margin-top:16px"><label class="gr" style="margin:0">Monthly spending limit (USD, optional)<input type="number" min="0" step="0.01" data-ai="lim" placeholder="No limit" value="${esc(a.lim)}"></label><label class="gr" style="margin:0">Warn at (% of limit)<input type="number" min="1" max="100" data-ai="warn" value="${a.warn}"></label></div>
+<p class="mu" style="margin-top:8px">${Sync.user?'Enforced by your DayFlow server, but only for providers where you entered prices and only from provider-reported token counts. Unknown prices cannot be counted. Estimates only.':'Sign in to enable server-side usage tracking and limits. Nothing is enforced locally.'}</p><div id="us">${usHTML()}</div>
+<div class="row it" style="margin-top:12px"><div class="gr">Allow automatic model selection<div class="mu">Off by default. DayFlow never changes your model unless you do.</div></div><button class="sw ${a.auto?'on':''}" data-a="auto" aria-label="Automatic model selection"></button></div>
+<ul class="mu" style="margin:12px 0 0 18px;line-height:1.8"><li>Never switches to a more expensive model automatically.</li><li>Never upgrades the selected model on its own.</li><li>Never sends to a different model without your confirmation.</li><li>The active model is always shown in the chat header.</li></ul></div></div>`};
+V.set=()=>`<div class="g"><div class="row">${[['gen','General'],['ai','AI Assistant']].map(([k,l])=>`<button class="chip ${ST0.v==k?'on':''}" data-a="st" data-v="${k}">${l}</button>`).join('')}</div>${ST0.v=='ai'?V.aiset():V.setGen()}</div>`;
+function provM(id){const p=id?S.ai.prov.find(x=>x.id==id):{name:'',url:'https://'};
+modal(id?'Edit provider':'Add provider',fld('pn','Provider name',p.name)+fld('pu','Base URL (OpenAI-compatible)',p.url)+(id?'':'<label>API key (optional)<input id="pk" type="password" autocomplete="off"></label>')+'<p class="mu" style="margin-top:12px">Chat requests will go to the base URL plus /chat/completions once the backend exists. None are sent now.</p>',()=>{
+const n=g('pn').trim(),u=g('pu').trim().replace(/\/+$/,'');if(!n)return toast('Enter a provider name'),false;if(!okUrl(u))return toast('Enter a valid http(s) URL'),false;
+if(id){p.name=n;p.url=u;S.ai.cur=id}else{const nid='p'+Date.now();S.ai.prov.push({id:nid,name:n,url:u,model:'',mname:''});if(g('pk'))KEYS[nid]=g('pk');S.ai.cur=nid;AIUI.pend=null}save();Sync.provPush();render()},id?'Save':'Add')}
+/* ---------- AI chat ---------- */
+const curChat=()=>S.chats.find(c=>c.id==S.cc)||S.chats[0],tf=t=>t?new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
+function reply(c){const u=[...c.m].reverse().find(m=>m.r=='u'),r=aiReply(u?u.t:''),p=ap();AIUI.busy=1;AIUI.cid=c.id;AIUI.live='';render();let i=0;
+setTimeout(()=>{AIUI.tm=setInterval(()=>{i+=2;AIUI.live=r.t.slice(0,i);const e=$('#ch');if(e&&curChat().id==c.id){e.innerHTML=chHTML();e.scrollTop=1e9}if(i>=r.t.length)endStream(c,r)},22)},700)}
+function endStream(c,r,stopped){clearInterval(AIUI.tm);AIUI.tm=null;const t=stopped?AIUI.live:r.t;c.m.push({...r,t:t||'(stopped)',r:'a',at:Date.now(),stopped:!!stopped});AIUI.busy=0;AIUI.live='';save();render()}
+function sendAI(q){if(AIUI.busy)return;if(!ap().model)return toast('Choose a model first');const c=curChat();c.m.push({r:'u',t:q,at:Date.now(),files:AIUI.files.map(f=>f.name)});AIUI.files=[];AIUI.draft='';if(c.title=='New chat')c.title=q.slice(0,28);save();Sync.route(c)}
+const msg=(m,i,last)=>`<div class="msg ${m.r}"><div class="mu">${m.r=='u'?'You':m.real?'DayFlow AI · '+esc(m.model):m.err?'DayFlow AI':'DayFlow AI (local demo)'} · ${tf(m.at)}</div><div class="mb">${esc(m.t)}</div>${(m.files||[]).map(f=>`<div class="mu">Attached: ${esc(f)} (not uploaded)</div>`).join('')}${(m.sch||[]).map((s,j)=>`<div class="row" style="margin-top:8px"><span class="gr">${s[0]} ${esc(s[1])}</span><button class="chip" data-a="as" data-v="${i}:${j}">Add to calendar</button></div>`).join('')}${(m.tasks||[]).map((s,j)=>`<div class="row" style="margin-top:8px"><span class="gr">${esc(s.t)} (${s.p})</span><button class="chip" data-a="at" data-v="${i}:${j}">Add task</button></div>`).join('')}${m.r=='a'?`<div class="row" style="margin-top:8px"><span class="mu gr">${m.stopped?'Stopped · ':''}${m.real?'Via '+esc(m.prov):m.err?'Request failed':'Local demo reply, no model was contacted'}</span><button class="chip" data-a="cp" data-v="${i}">Copy</button>${last?'<button class="chip" data-a="rt">Retry</button>':''}</div>`:`<div class="row" style="margin-top:6px"><button class="chip" data-a="cp" data-v="${i}">Copy</button></div>`}</div>`;
+const emptyHTML=()=>{const p=ap(),m=cm(p);return`<div class="empty"><h1 style="font-size:22px">What can I help you plan?</h1><p class="mu">Active model: <b>${esc(m?m.name:'None selected')}</b> on ${esc(p.name)}</p><div class="exg">${EX.map((x,i)=>`<button class="chip" data-a="ep" data-v="${i}">${esc(x)}</button>`).join('')}</div><p class="mu">DayFlow context (tasks, deadlines, classes, calendar) is coming soon and is not connected yet.</p></div>`};
+const chHTML=()=>{const c=curChat(),live=AIUI.busy&&AIUI.cid==c.id;if(!c.m.length&&!live)return emptyHTML();return c.m.map((m,i)=>msg(m,i,i==c.m.length-1)).join('')+(live?(AIUI.live?`<div class="msg a"><div class="mu">DayFlow AI (local demo) · streaming</div><div class="mb">${esc(AIUI.live)}<span class="cur"></span></div></div>`:'<div class="msg a"><div class="mu">DayFlow AI (local demo) · thinking</div><div class="dots"><i></i><i></i><i></i></div></div>'):'')};
+const clHTML=()=>{const q=AIUI.q.toLowerCase(),c0=curChat();return S.chats.filter(c=>!q||(c.title+c.m.map(m=>m.t).join(' ')).toLowerCase().includes(q)).map(c=>`<button class="li ${c.id==c0.id?'on':''}" data-a="och" data-v="${c.id}">${esc(c.title)}<div class="mu">${c.m.length} messages</div></button>`).join('')||'<p class="mu">No conversations found.</p>'};
+const clUpd=()=>{const e=$('#chl');if(e)e.innerHTML=clHTML()};
+const faHTML=()=>AIUI.files.map((f,i)=>`<span class="chip">${esc(f.name)} · ${Math.max(1,Math.round(f.size/1024))} KB${f.err?' · failed: '+esc(f.err):f.fid?' · uploaded':f.pct!=null?' · '+f.pct+'%':''} <button class="ib" style="padding:0 4px;min-height:0" data-a="fx" data-v="${i}" aria-label="Remove">✕</button></span>`).join('')+(AIUI.files.length?'<span class="mu">'+(Sync.user?'Stored privately on your server. Not sent to the AI model.':'Not uploaded. Sign in to upload files.')+'</span>':'');
+V.ai=()=>{const p=ap(),m=cm(p),ms=mods(p),b=AIUI.busy;
+const opts=(m?'':'<option value="" selected disabled>No model selected</option>')+ms.map(x=>`<option value="${esc(x.id)}" ${x.id==p.model?'selected':''}>${esc(x.name)}</option>`).join('')+(m&&m.manual?`<option value="${esc(m.id)}" selected>${esc(m.name)} (manual)</option>`:'');
+return`<div class="g2 aig"><div class="card cside"><button class="btn" data-a="nch" style="width:100%">+ New conversation</button><input id="cq" data-ai="cq" placeholder="Search conversations" value="${esc(AIUI.q)}" style="margin-top:14px"><div id="chl" class="cl" style="margin-top:12px">${clHTML()}</div></div>
+<div class="card chat"><div class="row chh"><div class="gr"><h3 style="margin:0">DayFlow AI</h3><div class="mu">Provider: ${esc(p.name)} · Model: <b>${esc(m?m.name:'None selected')}</b></div></div><select data-ai="hm" aria-label="Model" style="max-width:230px">${opts}</select><button class="chip" data-a="nch">New</button><button class="chip" data-a="opt" aria-label="Conversation options">⋯</button></div>
+${!m?'<p class="warnb">No model selected. Choose one in the header or in Settings, AI Assistant.</p>':isHi(m)?'<p class="warnb">This model looks expensive (demo estimate). Check Settings before chatting.</p>':''}
+${chatNote(p)}
+<div id="ch" class="chm">${chHTML()}</div><div id="fa" class="row" style="margin-top:8px">${faHTML()}</div>
+<div class="row inp"><input type="file" id="fi" data-ai="files" multiple hidden><button class="chip" data-a="att" ${b?'disabled':''}>Attach</button><textarea id="aq" data-ai="draft" rows="1" placeholder="Ask about homework, deadlines or your schedule..." ${b?'disabled':''}>${esc(AIUI.draft)}</textarea>${b?'<button class="btn ghost" data-a="stop">Stop</button>':'<button class="btn" data-a="send">Send</button>'}</div><p class="mu" style="margin:8px 0 0">Enter to send · Shift+Enter for a new line</p></div></div>`};
+/* ---------- settings ---------- */
+const sw=(k,l,d)=>`<div class="row it"><div class="gr">${l}<div class="mu">${d||''}</div></div><button class="sw ${S.set[k]?'on':''}" data-a="swt" data-v="${k}" aria-label="${l}"></button></div>`;
+V.setGen=()=>{const s=S.set;return`<div class="g3"><div class="card"><h3>Appearance</h3><div class="row">${['#7952FF','#B29AFF','#4F8CFF','#E255C9'].map(c=>`<button class="chip ${s.acc==c?'on':''}" data-a="acc" data-v="${c}" style="background:${c};width:28px;height:28px;padding:0" aria-label="Accent"></button>`).join('')}</div>${sw('cmp','Compact density','Tighter spacing')}</div>
+<div class="card"><h3>Notifications</h3>${sw('nt','Task reminders')}${sw('nd','Deadline alerts')}${sw('nc','Class alerts')}<button class="chip" data-a="tn">Send test notification</button><p class="mu" style="margin-top:6px">In-app only. No push notifications.</p></div>
+<div class="card"><h3>Sounds</h3>${sel('sn','Sound',['Soft','Chime','Pixel'],s.snd).replace('<select','<select data-i="snd"')}<label>Volume <span id="vv">${s.vol}</span><input type="range" min="0" max="100" value="${s.vol}" data-i="vol"></label><button class="chip" style="margin-top:8px" data-a="ps">Preview</button></div>
+<div class="card"><h3>Quiet hours</h3>${sw('q','Mute sounds in quiet hours','Currently '+(quiet()?'active':'inactive'))}<div class="row"><input type="time" value="${s.qs}" data-i="qs"><input type="time" value="${s.qe}" data-i="qe"></div></div>
+${acctCard(s)}
+<div class="card"><h3>Devices</h3><div class="it"><div class="gr">This browser<div class="mu">Current device</div></div></div><p class="mu">Cross device sync is not available. DayFlow has no backend, data stays in this browser.</p></div>
+<div class="card"><h3>AI configuration</h3>${sel('tn2','Reply tone',['concise','friendly'],s.tone).replace('<select','<select data-i="tone"')}<p class="mu" style="margin-top:8px">Scripted rules, no external model.</p></div>
+${ntfCard()}
+<div class="card"><h3>Timezone</h3><p>${Intl.DateTimeFormat().resolvedOptions().timeZone}</p><p class="mu" style="margin-top:8px">Reminders use this device timezone. Choosing another one needs account sync.</p></div>
+<div class="card"><h3>Privacy</h3><p class="mu" style="margin-bottom:12px">All data stays in this browser. Nothing is uploaded.</p><div class="row"><button class="chip" data-a="cwb">Clear whiteboard</button><button class="chip" data-a="cac">Clear AI chats</button></div></div>
+<div class="card"><h3>Data management</h3><div class="row"><button class="chip" data-a="ex">Export JSON</button><button class="chip" data-a="im">Import JSON</button><button class="chip" data-a="rs">Reset demo data</button></div></div></div>`};
+/* ---------- core ---------- */
+function render(){const k=V[cur]?cur:'dash';$('#ttl').textContent=PG.find(p=>p[0]==k)[1];$('#nv').innerHTML='<div class="logo">DAYFLOW</div>'+PG.map(([id,l,i])=>`<button class="${id==k?'on':''}" data-a="go" data-v="${id}"><span>${i}</span>${l}</button>`).join('');$('#pg').innerHTML=V[k]();if(k=='wb')wbInit();const ch=$('#ch');if(ch)ch.scrollTop=1e6}
+const A={go:v=>location.hash=v,nt:()=>taskM(),te:v=>taskM(v),sb:v=>{const[i,j]=v.split(':'),t=S.tasks.find(x=>x.id==i);t.subs[j].d=!t.subs[j].d;save();render()},td:v=>{S.tasks=S.tasks.filter(x=>x.id!=v);save();render()},tab:v=>{TF.tab=v;render()},
+cv:v=>{CAL={v,o:0};render()},cn:v=>{CAL.o=v==0?0:CAL.o+ +v;render()},nev:v=>eventM(null,v),ee:v=>eventM(v),evd:v=>{S.events=S.events.filter(x=>x.id!=v);document.querySelector('.ov').remove();save();render()},mx:()=>document.querySelector('.ov').remove(),
+dc:v=>{S.classes=S.classes.filter(x=>x.id!=v);save();render()},ct:v=>{const[i,k,j]=v.split(':'),x=S.classes.find(c=>c.id==i)[k][j];x.d=!x.d;save();render()},ci:v=>{const[i,k]=v.split(':'),e=$('#ci'+i+k);if(e.value.trim()){S.classes.find(c=>c.id==i)[k].push({t:e.value.trim(),d:false});save();render()}},
+
+wt:v=>{WB.tool=v;WB.txt=$('#wbt')?g('wbt'):WB.txt;render()},wc:v=>{WB.txt=g('wbt');WB.col=v;render()},wu:()=>{if(WB.u.length){WB.r.push(JSON.stringify(WB.o));WB.o=JSON.parse(WB.u.pop());fin()}},wr:()=>{if(WB.r.length){WB.u.push(JSON.stringify(WB.o));WB.o=JSON.parse(WB.r.pop());fin()}},wz:v=>zoom(+v),wx:()=>{snap();WB.o=[];fin()},
+nn:()=>{const n={id:Date.now(),t:'New note',b:'',f:NS.f=='All'?'School':NS.f,tags:'',pin:false};S.notes.push(n);NS.id=n.id;save();render()},nf:v=>{NS.f=v;NS.id=null;render()},no:v=>{NS.id=+v;render()},np:v=>{const n=S.notes.find(x=>x.id==v);n.pin=!n.pin;save();render()},ndl:v=>{S.notes=S.notes.filter(x=>x.id!=v);NS.id=null;save();render()},fm:v=>{document.execCommand(v=='h'?'formatBlock':v,false,v=='h'?'h3':null);const e=$('.ed');S.notes.find(x=>x.id==NS.id||!NS.id).b=e.innerHTML;save()},
+tm:v=>{clearInterval(tick);T={...T,m:v,left:D[v],run:false};render()},tt:()=>{if(T.run){clearInterval(tick);T.run=false;uT()}else startT()},tr:()=>{clearInterval(tick);T.run=false;T.left=D[T.m];render()},tf:()=>{T.left=0;fin2()},
+ask:()=>{const q=g('dq').trim();if(q){sendAI(q);location.hash='ai'}},
+at:v=>{const[i,j]=v.split(':'),x=curChat().m[i].tasks[j];S.tasks.push({id:Date.now(),t:x.t,p:x.p,c:x.c,d:iso(1),done:false,subs:[]});save();toast('Task added');},as:v=>{const[i,j]=v.split(':'),x=curChat().m[i].sch[j];S.events.push({id:Date.now(),t:x[1],date:iso(0),time:x[0],ty:'event'});save();toast('Added to calendar')},
+swt:v=>{S.set[v]=!S.set[v];save();skin();render()},acc:v=>{S.set.acc=v;save();skin();render()},tn:()=>toast('Test notification: you are all set',1),ps:()=>beep(1),
+ex:()=>modal('Export data (copy this JSON)',`<textarea readonly style="min-height:200px" onfocus="this.select()">${esc(JSON.stringify(S))}</textarea>`),im:()=>modal('Import JSON',`<textarea id="ij" style="min-height:160px"></textarea>`,()=>{try{const o=JSON.parse(g('ij'));if(!o.tasks||!o.set)throw 0;S=o;mig();save();skin();render()}catch(e){toast('Invalid DayFlow JSON');return false}},'Import'),rs:()=>modal('Reset demo data?','<p>This replaces everything in this browser with the demo data.</p>',()=>{S=def();mig();WB.o=[];save();skin();render()},'Reset')};
+Object.assign(A,{dy:(v,b)=>b.classList.toggle('on'),
+tg:v=>{const t=S.tasks.find(x=>x.id==v);if(t.rec.k!='none'&&!t.done){t.d=nextD(t.d,t.rec,t.d>iso(0)?t.d:iso(0));t.subs.forEach(x=>x.d=false);toast('Done. Next due '+t.d)}else t.done=!t.done;save();render()},
+qa:()=>{const v=g('qa').trim();if(!v)return toast('Type a task title first');S.tasks.push({id:Date.now(),t:v,desc:'',p:'med',c:'School',d:iso(0),tm:'',rec:{k:'none',days:[]},rm:'',done:false,subs:[]});save();render()},
+nr:()=>remM(),er:v=>remM(v),rd:v=>{S.rem=S.rem.filter(x=>x.id!=v);save();render()},nc2:()=>classM(),cx:v=>classM(v),
+cwb:()=>{WB.o=[];S.wb=[];save();toast('Whiteboard cleared')},cac:()=>{S.chats=[{id:1,title:'New chat',m:[{r:'a',t:'Chat history cleared.'}]}];S.cc=1;save();toast('AI chats cleared')}});
+Object.assign(A,{st:v=>{ST0.v=v;render()},eye:(v,b)=>{const i=$('#akey');i.type=i.type=='password'?'text':'password';b.textContent=i.type=='password'?'Show':'Hide'},
+tc:()=>toast('Placeholder: Test connection sends no request yet. Needs the backend.'),mr:()=>toast('Placeholder: models are DEMO data. Refresh needs the backend.'),
+psel:v=>{S.ai.cur=v;AIUI.pend=null;save();render()},pa:()=>provM(),pe:v=>provM(v),pd:v=>{S.ai.def=v;S.ai.cur=v;save();Sync.provPush();render();toast('Default provider updated')},
+pr:v=>{if(S.ai.prov.length<2)return toast('Keep at least one provider');const x=S.ai.prov.find(q=>q.id==v);modal('Remove provider?','<p>'+esc(x.name)+' and its in-memory API key will be removed from DayFlow.'+(S.ai.cur==v||S.ai.def==v?' The selected or default provider will move to the first remaining provider.':'')+'</p>',()=>{S.ai.prov=S.ai.prov.filter(q=>q.id!=v);delete KEYS[v];Sync.provDel(v);if(S.ai.cur==v)S.ai.cur=S.ai.prov[0].id;if(S.ai.def==v)S.ai.def=S.ai.prov[0].id;AIUI.pend=null;save();render()},'Remove')},
+mp:v=>{const m=mods(ap()).find(x=>x.id==v);AIUI.pend={id:m.id,name:m.name};render()},
+mm:()=>{const id=g('mid').trim();if(!/^[\w.:\/-]{1,100}$/.test(id))return toast('Enter a valid Model ID (letters, numbers, . : / - _)');AIUI.pend={id,name:id};AIUI.mid='';render()},
+mc:()=>{const x=AIUI.pend;if(!x)return toast('Pick a model first');const p=ap();p.model=x.id;p.mname=x.name;AIUI.pend=null;save();Sync.provPush();render();toast('Model set to '+x.name+' for '+p.name)},
+auto:()=>{S.ai.auto=!S.ai.auto;save();render()},
+nch:()=>{const id=Date.now();S.chats.unshift({id,title:'New chat',m:[]});S.cc=id;AIUI.q='';save();render()},och:v=>{S.cc=+v;render()},
+ep:v=>{AIUI.draft=EX[v];render();$('#aq').focus()},att:()=>$('#fi').click(),fx:v=>{const f=AIUI.files[+v];if(f&&f.fid)api('DELETE','/api/files/'+f.fid).catch(()=>{});AIUI.files.splice(+v,1);const e=$('#fa');if(e)e.innerHTML=faHTML()},
+send:()=>{const q=AIUI.draft.trim();if(AIUI.busy)return;if(!q&&!AIUI.files.length)return toast('Type a message first');if(!ap().model)return toast('Choose a model first');sendAI(q||'(attachment only)');setTimeout(()=>{const e=$('#aq');e&&e.focus()},0)},
+stop:()=>{const c=S.chats.find(x=>x.id==AIUI.cid);if(c&&AIUI.busy)endStream(c,{t:''},true)},
+cp:v=>{const t=curChat().m[v].t;navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t).then(()=>toast('Copied'),()=>toast('Copy is blocked in this view')):toast('Copy is not available here')},
+rt:()=>{const c=curChat();if(AIUI.busy)return;if(c.m.length&&c.m[c.m.length-1].r=='a')c.m.pop();if(c.m.length)reply(c)},
+opt:()=>modal('Conversation options','<div class="row"><button class="btn ghost" data-a="clr">Clear conversation</button><button class="btn ghost" data-a="del">Delete conversation</button></div>'),
+clr:()=>{document.querySelector('.ov').remove();modal('Clear conversation?','<p>All messages in this conversation will be removed.</p>',()=>{const c=curChat();c.m=[];c.title='New chat';save();render()},'Clear')},
+del:()=>{document.querySelector('.ov').remove();modal('Delete conversation?','<p>This conversation will be removed permanently.</p>',()=>{S.chats=S.chats.filter(x=>x.id!=curChat().id);if(!S.chats.length)S.chats.push({id:Date.now(),title:'New chat',m:[]});S.cc=S.chats[0].id;save();render()},'Delete')}});
+function chooseModel(id){if(!id)return;const p=ap(),m=mods(p).find(x=>x.id==id);p.model=id;p.mname=m?m.name:p.mname;save();Sync.provPush();toast('Model set to '+(m?m.name:id)+' ('+p.name+'). Applies to new messages.');render()}
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset.ai;if(!k)return;const a=S.ai;
+if(k=='pi'||k=='po'){const p=ap(),v=t.value===''?null:Math.max(0,+t.value);p[k=='pi'?'price_in':'price_out']=v;save();ceUpd();Sync.provPushLater()}else if(k=='ctx'){a.ctx=t.checked;save()}else if(k=='key'){KEYS[ap().id]=t.value;stat()}else if(k=='prov'){a.cur=t.value;AIUI.pend=null;save();render()}else if(k=='ms'){AIUI.ms=t.value;mlUpd()}else if(k=='mid')AIUI.mid=t.value;
+else if(k=='lim'){a.lim=t.value;save();ceUpd();Sync.limPush()}else if(k=='warn'){a.warn=Math.max(1,Math.min(100,+t.value||80));save();ceUpd();Sync.limPush()}else if(k=='et'||k=='eo'){a[k]=Math.max(0,+t.value||0);save();ceUpd()}
+else if(k=='cq'){AIUI.q=t.value;clUpd()}else if(k=='draft'){AIUI.draft=t.value;t.style.height='auto';t.style.height=Math.min(t.scrollHeight,160)+'px'}else if(k=='hm')chooseModel(t.value);
+else if(k=='files'){AIUI.files.push(...t.files);const nf=[...t.files];t.value='';const f=$('#fa');if(f)f.innerHTML=faHTML();nf.forEach(Sync.upload)}});
+document.addEventListener('keydown',e=>{const t=e.target;if(t.dataset&&t.dataset.ai=='draft'&&e.key=='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();A.send()}});
+
+/* ---------- account, sync, server AI (talks to the DayFlow backend; same origin) ---------- */
+const COLLS=['tasks','events','classes','rem','notes','chats'];
+const jget=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},jset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,9);
+async function api(m,u,b){const h={};if(b!==undefined)h['content-type']='application/json';if(Sync.tok)h.authorization='Bearer '+Sync.tok;let r;
+ try{r=await fetch(u,{method:m,headers:h,body:b!==undefined?JSON.stringify(b):undefined})}catch(e){throw Object.assign(new Error('Cannot reach the DayFlow server'),{net:true})}
+ let j={};try{j=await r.json()}catch(e){}
+ if(r.status==401&&Sync.tok&&!u.includes('/auth/login'))Sync.expire();
+ if(!r.ok)throw Object.assign(new Error(j.error||'Request failed ('+r.status+')'),{status:r.status,code:j.code,body:j});return j}
+var Sync={tok:localStorage.getItem('df_tok')||'',user:jget('df_user',null),owner:localStorage.getItem('df_owner')||'',shadow:jget('df_shadow',{}),q:jget('df_q',[]),since:+localStorage.getItem('df_since')||0,conf:jget('df_conf',[]),models:{},usage:null,st:'idle',err:'',last:0,busy:false,wait:0,pending:false,
+ save(){jset('df_shadow',this.shadow);jset('df_q',this.q);jset('df_conf',this.conf);localStorage.setItem('df_since',this.since)},
+ snap(){const o={};COLLS.forEach(c=>(S[c]||[]).forEach(it=>{o[c+'/'+it.id]=JSON.stringify(it)}));o['set/main']=JSON.stringify(S.set);o['wb/main']=JSON.stringify({o:S.wb||null});return o},
+ enq(k,del,json){const i=k.indexOf('/'),op={opId:uid(),k,coll:k.slice(0,i),id:k.slice(i+1),deleted:del,data:del?undefined:JSON.parse(json)},ex=this.q.find(o=>o.k==k&&!o.sent);if(ex)Object.assign(ex,op);else this.q.push(op)},
+ diff(){if(!this.user)return;const sn=this.snap(),sh=this.shadow;let ch=0;
+  for(const k in sn){const e=sh[k];if(!e||e.j!==sn[k]){this.enq(k,false,sn[k]);sh[k]={j:sn[k],v:e?e.v:0};ch=1}}
+  for(const k in sh)if(!(k in sn)&&sh[k].j!=null){this.enq(k,true);sh[k].j=null;ch=1}
+  if(ch){this.save();this.pill()}},
+ touch(){if(!this.user)return;clearTimeout(this.dt);this.dt=setTimeout(()=>{this.diff();this.run()},400)},
+ async run(){if(!this.user||!this.tok||this.busy||this.pending)return;if(navigator.onLine===false){this.st='offline';return this.pill()}
+  this.busy=true;this.st='syncing';this.pill();
+  try{await this.pushAll();await this.pullAll();this.st='idle';this.err='';this.last=Date.now();this.wait=0}
+  catch(e){if(e.net){this.st='offline'}else if(e.status!=401){this.st='error';this.err=e.message}this.retry()}
+  this.busy=false;this.save();this.pill();if(this.q.length&&this.st=='idle')this.run()},
+ retry(){clearTimeout(this.tm);this.wait=Math.min(300,(this.wait||5)*2);this.tm=setTimeout(()=>this.run(),this.wait*1000)},
+ async pushAll(){for(let g=0;this.q.length&&g<50;g++){const seen=new Set(),batch=[];for(const o of this.q){if(seen.has(o.k))continue;seen.add(o.k);batch.push(o);if(batch.length>=50)break}
+   batch.forEach(o=>o.sent=true);let r;
+   try{r=await api('POST','/api/sync/push',{ops:batch.map(o=>({opId:o.opId,coll:o.coll,id:o.id,base:(this.shadow[o.k]||{}).v||0,deleted:o.deleted,data:o.data}))})}catch(e){batch.forEach(o=>o.sent=false);throw e}
+   for(const res of r.results){const o=batch.find(x=>x.opId==res.opId);if(!o)continue;const k=o.k,e=this.shadow[k]||(this.shadow[k]={j:null,v:0});
+    this.q=this.q.filter(x=>x!==o);
+    if(res.status=='ok')e.v=res.version;
+    else{this.q=this.q.filter(x=>x.k!=k);this.conf=this.conf.filter(c=>c.k!=k);this.conf.push({k,coll:o.coll,id:o.id,server:res.server,at:Date.now()})}}
+   this.save();this.pill()}},
+ async pullAll(){for(let g=0;g<20;g++){const r=await api('GET','/api/sync/pull?since='+this.since);let ch=false;
+   for(const rec of r.records){const k=rec.coll+'/'+rec.id;if(this.q.some(o=>o.k==k)||this.conf.some(c=>c.k==k))continue;ch=this.apply(rec,k)||ch}
+   this.since=r.seq;this.save();if(ch)this.refresh();if(!r.more)break}},
+ apply(rec,k){const sh=this.shadow;if(sh[k]&&sh[k].v>=rec.version)return false;const c=rec.coll;
+  if(rec.deleted){if(COLLS.includes(c)&&S[c])S[c]=S[c].filter(x=>String(x.id)!=rec.id);sh[k]={j:null,v:rec.version};return true}
+  if(COLLS.includes(c)){S[c]=S[c]||[];const i=S[c].findIndex(x=>String(x.id)==rec.id);if(i<0)S[c].push(rec.data);else S[c][i]=rec.data}
+  else if(c=='set')S.set=rec.data;else if(c=='wb'){S.wb=rec.data.o;if(S.wb&&typeof WB!=='undefined')WB.o=S.wb}
+  sh[k]={j:JSON.stringify(rec.data),v:rec.version};return true},
+ refresh(n=0){S.chats=S.chats||[];if(!S.chats.length)S.chats.push({id:Date.now(),title:'New chat',m:[]});if(!S.chats.some(c=>c.id==S.cc))S.cc=S.chats[0].id;persist();
+  const a=document.activeElement,busy=document.querySelector('.ov')||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+  if(busy)return n<8?setTimeout(()=>this.refresh(n+1),2000):0;render()},
+ label(){if(!this.user)return'Local only';if(!this.tok)return'Signed out';if(this.pending)return'Finish sync setup';if(this.conf.length)return'Conflicts: '+this.conf.length;if(this.st=='syncing')return'Syncing...';const n=this.q.length;
+  if(this.st=='offline')return'Offline'+(n?' · '+n+' pending':'');if(this.st=='error')return'Sync error'+(n?' · '+n+' pending':'');return n?n+' pending':'Synced'},
+ pill(){const e=document.getElementById('syn');if(!e)return;e.textContent=this.label();e.title=(this.err||'')+(this.last?' Last sync '+new Date(this.last).toLocaleTimeString():'');e.style.color=(this.conf.length||this.st=='error')?'var(--no)':(this.st=='idle'&&this.user&&this.tok&&!this.q.length&&!this.pending)?'var(--ok)':''},
+ expire(){if(!this.tok)return;this.tok='';localStorage.removeItem('df_tok');this.pill();toast('Session expired. Sign in again to keep syncing.')},
+ async auth(mode,b){const r=await api('POST','/api/auth/'+mode,{...b,device:navigator.platform||'web'});this.tok=r.token;localStorage.setItem('df_tok',r.token);this.user=r.user;jset('df_user',r.user);await this.afterAuth()},
+ async afterAuth(){const me=await api('GET','/api/auth/me'),localN=COLLS.reduce((n,c)=>n+(S[c]||[]).length,0);this.loadProv();
+  if(this.owner==me.user.id){this.diff();this.run()}
+  else if(me.recordCount==0){this.setOwner(me.user.id);this.reset();this.diff();this.run()}
+  else if(localN==0){this.setOwner(me.user.id);this.useAccount()}
+  else{this.pending=true;this.pill();this.choose()}
+  this.pill()},
+ setOwner(id){this.owner=id;localStorage.setItem('df_owner',id)},
+ reset(){this.shadow={};this.q=[];this.conf=[];this.since=0},
+ choose(){modal('Sync this device',`<p>This account already has data, and this device has its own local data.</p><p class="mu" style="margin-top:8px">Nothing is deleted on the server either way.</p><div class="row" style="margin-top:14px"><button class="btn" data-a="uacc">Use my account data (replace this device's data)</button></div><div class="row" style="margin-top:10px"><button class="chip" data-a="mrg">Add this device's data to my account as new items</button></div>`)},
+ useAccount(){this.setOwner(this.user.id);COLLS.forEach(c=>S[c]=[]);this.reset();this.pending=false;persist();this.diffSkip();this.run()},
+ diffSkip(){},
+ merge(){this.setOwner(this.user.id);let n=Date.now();COLLS.forEach(c=>(S[c]||[]).forEach(it=>{const old=it.id;it.id=n++;if(c=='chats'&&S.cc==old)S.cc=it.id}));this.reset();
+  this.shadow['set/main']={j:JSON.stringify(S.set),v:0};this.shadow['wb/main']={j:JSON.stringify({o:S.wb||null}),v:0};this.pending=false;persist();this.diff();this.run()},
+ local(c){return COLLS.includes(c.coll)?(S[c.coll]||[]).find(x=>String(x.id)==c.id):c.coll=='set'?S.set:{o:S.wb}},
+ ttl(c){const x=c.server.data||this.local(c)||{};return x.t||x.title||c.coll+' '+c.id},
+ confM(){modal('Sync conflicts','<p class="mu">The same item changed on two devices. Nothing is overwritten until you choose.</p>'+this.conf.map((c,i)=>`<div class="it"><div class="gr"><b>${esc(this.ttl(c))}</b><div class="mu">${this.local(c)?'Edited on this device':'Deleted on this device'} · server copy ${c.server.deleted?'was deleted':'updated '+new Date(c.server.updated_at).toLocaleString()}</div></div><button class="chip" data-a="cres" data-v="${i}:mine">Keep mine</button><button class="chip" data-a="cres" data-v="${i}:srv">Use server</button></div>`).join(''))},
+ resolve(i,how){const c=this.conf[i];if(!c)return;this.conf.splice(i,1);const k=c.k;
+  if(how=='mine'){const loc=this.local(c);this.shadow[k]={j:loc?JSON.stringify(c.coll=='wb'?{o:S.wb||null}:loc):null,v:c.server.version};this.enq(k,!loc,loc?this.shadow[k].j:null)}
+  else{this.shadow[k]={j:null,v:0};this.apply(c.server,k)}
+  this.save();const o=document.querySelector('.ov');o&&o.remove();this.pill();if(this.conf.length)this.confM();else{this.refresh();this.run()}},
+ async logout(){try{await api('POST','/api/auth/logout',{})}catch(e){}this.tok='';this.user=null;this.pending=false;localStorage.removeItem('df_tok');localStorage.removeItem('df_user');this.models={};this.usage=null;
+  S.ai.prov=defAI().prov;S.ai.cur='vyceai';S.ai.def='vyceai';persist();this.pill();render()},
+ wipe(){this.tok='';this.user=null;this.owner='';this.pending=false;this.reset();['df_tok','df_user','df_owner','df_shadow','df_q','df_conf','df_since'].forEach(k=>localStorage.removeItem(k));S.ai.prov=defAI().prov;S.ai.cur='vyceai';S.ai.def='vyceai';persist();this.pill();render()},
+ async init(){this.pill();window.addEventListener('online',()=>{toast('Back online. Syncing...');this.run()});window.addEventListener('offline',()=>{this.st='offline';this.pill()});window.addEventListener('focus',()=>this.run());setInterval(()=>this.run(),20000);
+  if(!this.user||!this.tok)return;
+  try{const me=await api('GET','/api/auth/me');this.user=me.user;jset('df_user',me.user)}catch(e){if(e.status==401)return}
+  this.loadProv();this.loadUsage();this.diff();this.run()},
+ async loadProv(){if(!this.user||!this.tok)return;try{const r=await api('GET','/api/ai/providers'),old=S.ai.prov;
+   S.ai.prov=r.providers.map(p=>({id:p.id,name:p.name,url:p.base_url,model:p.model,mname:p.mname,hasKey:p.hasKey,verified:p.verified,price_in:p.price_in,price_out:p.price_out,test:(old.find(o=>o.id==p.id)||{}).test}));
+   const d=r.providers.find(p=>p.is_default)||r.providers[0];S.ai.def=d.id;if(!S.ai.prov.some(p=>p.id==S.ai.cur))S.ai.cur=d.id;
+   const s=await api('GET','/api/ai/settings');S.ai.lim=s.monthly_limit==null?'':String(s.monthly_limit);S.ai.warn=s.warn_pct;persist();if(cur=='ai'||cur=='set')this.refresh()}catch(e){}},
+ provPush(r=true){if(!this.user||!this.tok)return Promise.resolve();const p=ap();
+  this.pp=(this.pp||Promise.resolve()).then(async()=>{try{const x=await api('PUT','/api/ai/providers/'+p.id,{name:p.name,url:p.url,model:p.model,mname:p.mname,price_in:p.price_in,price_out:p.price_out,is_default:p.id==S.ai.def,key:KEYS[p.id]});delete KEYS[p.id];Object.assign(p,{hasKey:x.provider.hasKey,verified:x.provider.verified});persist();if(r&&(cur=='set'||cur=='ai'))this.refresh()}catch(e){toast('Provider "'+p.name+'": '+e.message)}});return this.pp},
+ provPushLater(){clearTimeout(this.pl);this.pl=setTimeout(()=>this.provPush(false),700)},
+ provDel(id){if(this.user&&this.tok)api('DELETE','/api/ai/providers/'+id).catch(e=>toast(e.message))},
+ limPush(){clearTimeout(this.ll);this.ll=setTimeout(()=>{if(!this.user||!this.tok)return;const l=parseFloat(S.ai.lim);api('PUT','/api/ai/settings',{monthly_limit:isNaN(l)?null:l,warn_pct:S.ai.warn}).catch(e=>toast(e.message))},700)},
+ async loadUsage(){if(!this.user||!this.tok)return;try{this.usage=await api('GET','/api/ai/usage');const e=$('#us');if(e)e.innerHTML=usHTML()}catch(e){}},
+ upload:f=>{if(!Sync.user||!Sync.tok)return;const fa=()=>{const e=$('#fa');if(e)e.innerHTML=faHTML()};if(f.size>10*1048576){f.err='over 10 MB';return fa()}
+  const x=new XMLHttpRequest();x.open('POST','/api/files?owner=chat:'+curChat().id);x.setRequestHeader('authorization','Bearer '+Sync.tok);x.setRequestHeader('x-filename',encodeURIComponent(f.name));f.pct=0;
+  x.upload.onprogress=e=>{if(e.lengthComputable){f.pct=Math.round(e.loaded/e.total*100);fa()}};
+  x.onload=()=>{let j={};try{j=JSON.parse(x.responseText)}catch(e){}if(x.status==200){f.fid=j.id;f.pct=100}else f.err=j.error||'upload failed';fa()};x.onerror=()=>{f.err='network error';fa()};x.send(f)},
+ route(c){if(!this.user)return reply(c);const p=ap();
+  if(!p.hasKey)return this.aiErr(c,'No API key is saved for '+p.name+'. Add one in Settings, AI Assistant.');
+  if(navigator.onLine===false)return this.aiErr(c,'You are offline. AI requests need an internet connection.');this.real(c)},
+ aiErr(c,t){c.m.push({r:'a',t,err:true,at:Date.now()});save();render()},
+ async real(c){const p=ap(),m=cm(p);AIUI.busy=1;AIUI.cid=c.id;AIUI.live='';AIUI.ctl=new AbortController();render();
+  const hist=c.m.filter(x=>!x.err).slice(-20).map(x=>({role:x.r=='u'?'user':'assistant',content:x.t})),
+   body={provider:p.id,model:p.model,messages:[{role:'system',content:'You are DayFlow AI, a concise study and productivity assistant for students.'},...hist],stream:true,context:!!S.ai.ctx,confirmOverLimit:!!AIUI.over};AIUI.over=false;
+  let out='',stopped=false,fail=null;
+  try{const r=await fetch('/api/ai/chat',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+Sync.tok},body:JSON.stringify(body),signal:AIUI.ctl.signal});
+   if(!r.ok){const j=await r.json().catch(()=>({}));if(r.status==401)Sync.expire();throw Object.assign(new Error(j.error||'Request failed'),{code:j.code})}
+   const rd=r.body.getReader(),dc=new TextDecoder();let buf='';
+   for(;;){const {done,value}=await rd.read();if(done)break;buf+=dc.decode(value,{stream:true});const ls=buf.split('\n');buf=ls.pop();
+    for(const l of ls){if(!l.startsWith('data: '))continue;const d=l.slice(6).trim();if(d=='[DONE]')continue;let j;try{j=JSON.parse(d)}catch(e){continue}
+     if(j.error)throw new Error(j.error);const t=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;
+     if(t){out+=t;AIUI.live=out;const e=$('#ch');if(e&&curChat().id==c.id){e.innerHTML=chHTML();e.scrollTop=1e9}}}}
+  }catch(e){if(e.name=='AbortError')stopped=true;else fail=e}
+  AIUI.busy=0;AIUI.live='';AIUI.ctl=null;
+  if(fail&&fail.code=='limit_reached'){c.m.push({r:'a',t:'Blocked: your monthly spending limit is reached. Nothing was sent.',err:true,at:Date.now()});save();render();
+   return modal('Monthly limit reached','<p>Your estimated spend has reached the limit you set. Send this message anyway, or change the limit in Settings.</p>',()=>{c.m.pop();AIUI.over=true;Sync.route(c)},'Send anyway')}
+  if(fail)c.m.push({r:'a',t:'Error: '+(fail.code=='rate_limited'?'the provider rate limit was reached. Try again shortly.':fail.code=='invalid_key'?'the provider rejected your API key. Check it in Settings.':fail.code=='model_not_found'?'the provider does not have the selected model. Pick another model in the header; DayFlow will not switch for you.':fail.message),err:true,at:Date.now()});
+  else c.m.push({r:'a',t:out||(stopped?'(stopped)':'(empty reply)'),real:true,model:m?m.name:p.model,prov:p.name,at:Date.now(),stopped});
+  save();render();this.loadUsage()}};
+const usHTML=()=>{const u=Sync.usage;if(!Sync.user||!u)return'<p class="mu">Usage this month: '+(Sync.user?'loading...':'not tracked (sign in)')+'</p>';
+ return`<div class="kv"><span class="mu">Requests this month</span><span>${u.requests}</span><span class="mu">Tokens (provider-reported)</span><span>${u.prompt_tokens.toLocaleString()} in / ${u.completion_tokens.toLocaleString()} out</span><span class="mu">Estimated spend</span><span>${u.unpriced_requests&&!u.est_cost?'Not available (no price entered)':'$'+u.est_cost.toFixed(4)+' est.'+(u.unpriced_requests?' (partial: '+u.unpriced_requests+' requests could not be priced)':'')}</span></div>`+(u.limit>0&&u.est_cost>=u.limit*u.warn_pct/100?`<p class="warnb">You have passed ${u.warn_pct}% of your monthly limit.</p>`:'')};
+const keyBlock=p=>Sync.user?`<label>API key for ${esc(p.name)}<div class="row"><input class="gr" id="akey" type="password" autocomplete="new-password" placeholder="${p.hasKey?'Key saved. Paste a new key to replace it':'Paste your API key'}"><button class="chip" data-a="eye">Show</button><button class="btn" data-a="ksave">Save key</button></div></label><p class="mu" style="margin-top:8px">${p.hasKey?'A key is saved on your DayFlow server (encrypted, never shown again).':'No key saved yet.'} It is sent once to your server and is never kept in this browser.</p>`
+ :`<label>API key for ${esc(p.name)}<div class="row"><input class="gr" id="akey" type="password" data-ai="key" autocomplete="off" placeholder="Paste your API key" value="${esc(KEYS[p.id]||'')}"><button class="chip" data-a="eye">Show</button></div></label><p class="mu" style="margin-top:8px">Not signed in: held in memory only and cleared on reload. Sign in to store keys securely on the server.</p>`;
+const chatNote=p=>Sync.user&&p.hasKey?`<div class="row" style="margin:10px 0 0"><span class="mu gr">Live: requests go through your DayFlow server to ${esc(p.name)} using exactly the selected model.</span><label class="mu" style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" data-ai="ctx" ${S.ai.ctx?'checked':''} style="width:auto"> Include my tasks and events</label></div>`
+ :`<p class="mu" style="margin:10px 0 0">${Sync.user?'No API key saved for '+esc(p.name)+'. Add one in Settings, AI Assistant.':'Demo mode: replies come from local rules. Sign in and add an API key for real answers.'}</p>`;
+const acctCard=s=>`<div class="card"><h3>Account</h3><label>Display name<input value="${esc(s.name)}" data-i="name"></label>`+(Sync.user?`<p style="margin-top:14px"><b>${esc(Sync.user.username)}</b> <span class="mu">${esc(Sync.user.email)}</span></p><p class="mu" style="margin-top:6px">Sync: ${esc(Sync.label())}</p><div class="row" style="margin-top:14px"><button class="chip" data-a="sync">${Sync.conf.length?'Review conflicts':Sync.pending?'Finish setup':'Sync now'}</button><button class="chip" data-a="exp">Export my data</button><button class="chip" data-a="lo">Log out</button><button class="chip" data-a="delacc">Delete account</button></div>`
+ :`<p class="mu" style="margin:14px 0">Not signed in. Your data stays on this device. Sign in to sync between Windows and Android.</p><div class="row"><button class="btn" data-a="lin">Sign in</button><button class="chip" data-a="reg">Create account</button></div>`)+`</div>`;
+const ntfCard=()=>{const ok='Notification' in window,pm=ok?Notification.permission:'unsupported';return`<div class="card"><h3>System notifications</h3><p>Permission: <b>${pm}</b></p><p class="mu" style="margin:8px 0 14px">Shows a system notification for reminders while DayFlow is open. Delivery while the app is closed needs the native Windows and Android apps, which are not built yet.${pm=='denied'?' Notifications are blocked: change this in your browser or system settings.':''}</p>${pm=='default'?'<button class="chip" data-a="ntf">Enable system notifications</button>':''}</div>`};
+const sysNotify=m=>{if(quiet()||!('Notification' in window)||Notification.permission!='granted')return;try{new Notification('DayFlow',{body:m,tag:m})}catch(e){}};
+function authM(mode){const reg=mode=='register';modal(reg?'Create account':'Sign in',(reg?fld('au','Username',''):'')+fld('ae','Email','','email')+`<label>Password<input id="apw" type="password" autocomplete="${reg?'new-password':'current-password'}"></label>`+(reg?'<p class="mu" style="margin-top:8px">At least 8 characters.</p>':'<div class="row" style="margin-top:12px"><button type="button" class="chip" data-a="fgt">Forgot password?</button></div>'),()=>{doAuth(mode);return false},reg?'Create account':'Sign in')}
+async function doAuth(mode){const ov=document.querySelector('.ov'),b={email:g('ae').trim(),password:g('apw')};if(mode=='register')b.username=g('au').trim();
+ try{await Sync.auth(mode,b);ov&&ov.remove();render()}catch(e){toast(e.message)}}
+Object.assign(A,{sync:()=>{if(Sync.conf.length)return Sync.confM();if(Sync.pending)return Sync.choose();if(!Sync.user)return authM('login');if(!Sync.tok)return authM('login');Sync.diff();Sync.run();toast('Syncing...')},
+ lin:()=>authM('login'),reg:()=>authM('register'),lo:()=>Sync.logout(),uacc:()=>{document.querySelector('.ov').remove();Sync.useAccount();toast('Using your account data')},mrg:()=>{document.querySelector('.ov').remove();Sync.merge();toast('Adding this device\'s data to your account')},
+ cres:v=>{const[i,h]=v.split(':');Sync.resolve(+i,h)},ntf:()=>{if(!('Notification' in window))return toast('This browser does not support system notifications');Notification.requestPermission().then(p=>{toast(p=='granted'?'System notifications enabled':'Permission '+p);render()})},
+ fgt:()=>{document.querySelector('.ov').remove();modal('Reset password',fld('fe','Email','','email')+'<div class="row" style="margin-top:12px"><button type="button" class="chip" data-a="fsend">Send reset code</button></div><p class="mu" style="margin-top:8px">Email delivery is not set up on this server yet, so the code cannot be emailed. The server administrator can issue one.</p>'+fld('fc','Reset code','')+`<label>New password<input id="fp" type="password" autocomplete="new-password"></label>`,()=>{api('POST','/api/auth/reset',{token:g('fc').trim(),password:g('fp')}).then(()=>{document.querySelector('.ov')&&document.querySelector('.ov').remove();toast('Password changed. Sign in with the new password.')}).catch(e=>toast(e.message));return false},'Reset password')},
+ fsend:()=>api('POST','/api/auth/forgot',{email:g('fe').trim()}).then(r=>{toast(r.message);if(r.devToken)$('#fc').value=r.devToken}).catch(e=>toast(e.message)),
+ exp:async()=>{try{const r=await fetch('/api/account/export',{headers:{authorization:'Bearer '+Sync.tok}});if(!r.ok)throw new Error('Export failed ('+r.status+')');const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download='dayflow-export.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('Export downloaded')}catch(e){toast(e.message)}},
+ delacc:()=>modal('Delete account?','<p>This permanently deletes your account, synced data, AI settings, saved API keys and uploaded files from the server. Data on this device is kept.</p>'+`<label>Confirm your password<input id="dpw" type="password" autocomplete="current-password"></label>`,()=>{api('DELETE','/api/account',{password:g('dpw')}).then(()=>{document.querySelector('.ov')&&document.querySelector('.ov').remove();Sync.wipe();toast('Account deleted')}).catch(e=>toast(e.message));return false},'Delete forever'),
+ st:v=>{ST0.v=v;render();if(v=='ai')Sync.loadUsage()},
+ ksave:async()=>{const v=($('#akey').value||'').trim();if(!v)return toast('Paste a key first');const p=ap();KEYS[p.id]=v;p.test=null;await Sync.provPush();toast(p.hasKey?'Key saved on the server':'Key was not saved')},
+ tc:async()=>{const p=ap();if(!Sync.user||!Sync.tok)return toast('Sign in first. Connection tests run on your DayFlow server.');if(!p.hasKey)return toast('Save an API key first');toast('Testing connection...');
+  try{const r=await api('POST','/api/ai/providers/'+p.id+'/test',{});p.test={ok:r.ok,at:Date.now(),msg:r.message||r.code};if(r.ok)p.verified=r.verified;toast(r.ok?'Connection OK':'Connection failed: '+r.message)}catch(e){p.test={ok:false,at:Date.now(),msg:e.message};toast(e.message)}persist();render()},
+ mr:async()=>{const p=ap();if(!Sync.user||!Sync.tok)return toast('Sign in first. Models load through your DayFlow server.');if(!p.hasKey)return toast('Save an API key first');toast('Loading models...');
+  try{const r=await api('GET','/api/ai/providers/'+p.id+'/models');Sync.models[p.id]=r.models.map(m=>({id:m.id,name:m.name,ctx:m.ctx,live:1,pin:null,pout:null,maxOut:null,tools:null,vision:null,stream:null}));p.verified=r.verified;persist();render();toast('Loaded '+r.models.length+' models')}catch(e){toast(e.message)}},
+ stop:()=>{if(AIUI.ctl)return AIUI.ctl.abort();const c=S.chats.find(x=>x.id==AIUI.cid);if(c&&AIUI.busy)endStream(c,{t:''},true)},
+ rt:()=>{const c=curChat();if(AIUI.busy)return;if(c.m.length&&c.m[c.m.length-1].r=='a')c.m.pop();if(c.m.length)Sync.route(c)}});
+document.addEventListener('click',e=>{if(e.target.classList.contains('ov'))return e.target.remove();const b=e.target.closest('[data-a]');if(b)A[b.dataset.a](b.dataset.v,b)});
+document.addEventListener('keydown',e=>{const t=e.target;if(e.key=='Enter'&&t.dataset&&t.dataset.en)A[t.dataset.en](t.dataset.v)});
+document.addEventListener('input',e=>{const t=e.target,d=t.dataset;if(d.i){S.set[d.i]=t.type=='range'?+t.value:t.value;save();if(d.i=='vol'){const v=$('#vv');if(v)v.textContent=t.value}}else if(d.s){const k=d.s;if(k=='nq')NS.q=t.value;else TF[k]=t.value;const id=t.id,p=t.selectionStart;render();const n=$('#'+id);if(n){n.focus();try{n.setSelectionRange(p,p)}catch(x){}}}else if(d.n){const n=S.notes.find(x=>x.id==NS.id)||S.notes.filter(x=>(NS.f=='All'||x.f==NS.f)).sort((a,b)=>b.pin-a.pin)[0];n[d.n]=d.n=='b'?t.innerHTML:t.value;save();if(d.n=='f')render()}else if(d.f){T.task=t.value}});
+addEventListener('hashchange',()=>{cur=location.hash.slice(1)||'dash';render()});
+addEventListener('resize',()=>{if(cur=='wb')wbInit()});
+mig();Sync.init();setInterval(chk,10000);cur=location.hash.slice(1)||'dash';skin();render();chk();
+</script></body></html>

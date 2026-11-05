@@ -1,0 +1,16 @@
+{
+  "name": "dayflow-desktop",
+  "version": "1.0.0",
+  "description": "DayFlow for Windows (loads your DayFlow server)",
+  "main": "main.js",
+  "author": "DayFlow",
+  "scripts": { "start": "electron .", "dist": "electron-builder --win --publish never" },
+  "devDependencies": { "electron": "^33.0.0", "electron-builder": "^25.1.8" },
+  "build": {
+    "appId": "com.dayflow.desktop",
+    "productName": "DayFlow",
+    "files": ["main.js", "config.json"],
+    "win": { "target": "nsis" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
+  }
+}

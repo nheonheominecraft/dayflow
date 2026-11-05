@@ -1,0 +1,2 @@
+{ "name": "dayflow-server", "version": "1.0.0", "private": true, "description": "DayFlow backend (zero dependencies, Node 22.13+)",
+  "engines": { "node": ">=22.13" }, "scripts": { "start": "node server/index.js", "test": "node --test test/api.test.js" } }

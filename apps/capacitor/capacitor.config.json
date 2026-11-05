@@ -1,0 +1,1 @@
+{ "appId": "com.dayflow.app", "appName": "DayFlow", "webDir": "www", "server": { "url": "__SERVER_URL__", "cleartext": false } }
